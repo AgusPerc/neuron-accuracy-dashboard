@@ -1,0 +1,17 @@
+# Script del Agente: [nombre]
+# Agent ID: [id]
+
+## Saludo
+[script de saludo]
+
+## Identificación
+[script de identificación del deudor]
+
+## Motivo de llamada
+[script del motivo]
+
+## Negociación
+[script de negociación]
+
+## Cierre
+[script de cierre]

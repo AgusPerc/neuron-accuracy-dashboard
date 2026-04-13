@@ -1,0 +1,10 @@
+supabase
+pandas
+anthropic
+google-generativeai
+groq
+scikit-learn
+matplotlib
+seaborn
+python-dotenv
+tabulate
