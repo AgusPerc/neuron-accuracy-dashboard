@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neuron Accuracy Monitor</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── RESET & BASE ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #f5f6f8;
+      --card-bg:        #ffffff;
+      --card-border:    rgba(0,0,0,0.06);
+      --card-shadow:    0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+      --text-primary:   #1a1a1a;
+      --text-secondary: #6c757d;
+      --text-muted:     #a0a6ab;
+      --nav-bg:         #ffffff;
+      --nav-border:     rgba(0,0,0,0.07);
+      --tab-hover:      rgba(242,110,50,0.07);
+      --grid-color:     rgba(0,0,0,0.06);
+      --tooltip-bg:     #ffffff;
+      --tooltip-border: rgba(0,0,0,0.1);
+      --tooltip-text:   #1a1a1a;
+      --pill-bg:        rgba(0,0,0,0.05);
+      --table-hover:    rgba(0,0,0,0.025);
+      --table-border:   rgba(0,0,0,0.06);
+      --orange: #f26e32;
+      --teal:   #28a1be;
+      --purple: #a855f7;
+      --green:  #22c55e;
+      --amber:  #f59e0b;
+      --red:    #ef4444;
+      --transition: 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg:             #0a0a0b;
+      --card-bg:        #151518;
+      --card-border:    rgba(255,255,255,0.07);
+      --card-shadow:    0 1px 4px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.3);
+      --text-primary:   #f2f2f2;
+      --text-secondary: #c8c8c8;
+      --text-muted:     #686868;
+      --nav-bg:         #111114;
+      --nav-border:     rgba(255,255,255,0.07);
+      --tab-hover:      rgba(242,110,50,0.12);
+      --grid-color:     rgba(255,255,255,0.06);
+      --tooltip-bg:     #1e1e22;
+      --tooltip-border: rgba(255,255,255,0.1);
+      --tooltip-text:   #f2f2f2;
+      --pill-bg:        rgba(255,255,255,0.06);
+      --table-hover:    rgba(255,255,255,0.03);
+      --table-border:   rgba(255,255,255,0.07);
+    }
+
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* ── LAYOUT ────────────────────────────────────────────── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────── */
+    nav {
+      flex-shrink: 0;
+      height: 56px;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--nav-border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 16px;
+      transition: background var(--transition), border-color var(--transition);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nav-logo img {
+      height: 26px;
+      width: auto;
+    }
+    [data-theme="dark"] .nav-logo img {
+      filter: invert(1);
+    }
+    .nav-logo-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--nav-border);
+      flex-shrink: 0;
+    }
+
+    .nav-tabs {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      background: var(--tab-hover);
+      color: var(--orange);
+    }
+    .tab-btn.active {
+      background: var(--orange);
+      color: #ffffff;
+    }
+
+    /* ── THEME TOGGLE ──────────────────────────────────────── */
+    .theme-toggle {
+      flex-shrink: 0;
+      background: var(--pill-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition);
+    }
+    .theme-toggle:hover {
+      color: var(--text-primary);
+      border-color: var(--orange);
+    }
+    .theme-icon { font-size: 14px; }
+
+    /* ── TAB PANELS ────────────────────────────────────────── */
+    .tab-content {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .tab-panel {
+      display: none;
+      height: 100%;
+      padding: 18px 20px;
+      overflow: hidden;
+    }
+    .tab-panel.active { display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── CARDS ─────────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      transition: background var(--transition), border-color var(--transition);
+      overflow: hidden;
+    }
+    .card-inner {
+      padding: 16px 20px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    /* ── KPI CARDS ─────────────────────────────────────────── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      border-left: 4px solid transparent;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .kpi-card.orange { border-left-color: var(--orange); }
+    .kpi-card.teal   { border-left-color: var(--teal); }
+    .kpi-card.purple { border-left-color: var(--purple); }
+
+    .kpi-accent {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .kpi-accent.orange { background: rgba(242,110,50,0.1); color: var(--orange); }
+    .kpi-accent.teal   { background: rgba(40,161,190,0.1); color: var(--teal); }
+    .kpi-accent.purple { background: rgba(168,85,247,0.1); color: var(--purple); }
+    .kpi-accent svg { width: 18px; height: 18px; }
+
+    .kpi-body { flex: 1; min-width: 0; }
+    .kpi-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .kpi-card.orange .kpi-value { color: var(--orange); }
+    .kpi-card.teal   .kpi-value { color: var(--teal); }
+    .kpi-card.purple .kpi-value { color: var(--purple); }
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ── SECTION HEADER ────────────────────────────────────── */
+    .section-header {
+      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ── CHART CONTAINERS ──────────────────────────────────── */
+    .chart-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+    }
+    .chart-wrap canvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* ── TAB 1: RESUMEN ────────────────────────────────────── */
+    #tab-resumen {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .resumen-chart-card {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .resumen-chart-card .card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 14px;
+    }
+
+    /* ── TAB 2: POR LABEL ──────────────────────────────────── */
+    #tab-label {
+      flex-direction: row;
+      gap: 14px;
+    }
+    .label-left {
+      flex: 0 0 60%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 0;
+    }
+    .label-right {
+      flex: 0 0 calc(40% - 14px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .label-chart-card {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .label-chart-card .card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .insight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border-left: 3px solid transparent;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .insight-card.red    { border-left-color: var(--red); }
+    .insight-card.amber  { border-left-color: var(--amber); }
+    .insight-card.green  { border-left-color: var(--green); }
+    .insight-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .insight-body {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .insight-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .insight-badge.red    { background: rgba(239,68,68,0.12);   color: var(--red); }
+    .insight-badge.amber  { background: rgba(245,158,11,0.12);  color: var(--amber); }
+    .insight-badge.green  { background: rgba(34,197,94,0.12);   color: var(--green); }
+
+    /* ── TAB: CONFUSION MATRIX ─────────────────────────────── */
+    #tab-matrix {
+      flex-direction: column;
+      gap: 14px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .matrix-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .matrix-toggle-row {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .matrix-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .matrix-btn:hover {
+      background: var(--tab-hover);
+      color: var(--text-primary);
+    }
+    .matrix-btn.active {
+      background: var(--orange);
+      color: #ffffff;
+      border-color: var(--orange);
+    }
+    .matrix-stats {
+      display: flex;
+      gap: 18px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+    .matrix-stat-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .matrix-card {
+      flex: 0 0 auto;
+      padding: 22px 24px;
+    }
+    .matrix-card .card-inner {
+      padding: 0;
+    }
+    .matrix-grid-wrap {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .matrix-grid {
+      display: grid;
+      gap: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .matrix-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      min-height: 36px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+    .matrix-cell.data {
+      cursor: pointer;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .matrix-cell.data:hover {
+      transform: scale(1.08);
+      z-index: 5;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .matrix-cell.data.diagonal {
+      font-weight: 700;
+    }
+    .matrix-cell.header {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      background: transparent;
+      min-height: 28px;
+    }
+    .matrix-cell.header.col {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      min-height: 90px;
+      padding: 6px 4px;
+    }
+    .matrix-cell.corner {
+      background: transparent;
+      border: none;
+    }
+    .matrix-axis-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 8px 0;
+    }
+    .matrix-axis-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .matrix-tooltip {
+      position: fixed;
+      background: var(--tooltip-bg);
+      border: 1px solid var(--tooltip-border);
+      color: var(--tooltip-text);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.12s ease;
+      max-width: 280px;
+    }
+    .matrix-tooltip.visible { opacity: 1; }
+    .matrix-tooltip-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+    .matrix-tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+    .matrix-tooltip-row strong {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .matrix-explainer {
+      flex-shrink: 0;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      padding: 14px 18px;
+      background: var(--card-bg);
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      line-height: 1.55;
+    }
+    .matrix-explainer strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ── TAB 3: ERRORES ────────────────────────────────────── */
+    #tab-errores {
+      flex-direction: column;
+    }
+    .errores-header {
+      flex-shrink: 0;
+      margin-bottom: 12px;
+    }
+    .errores-card {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .errores-card .card-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding-bottom: 0;
+    }
+    .table-container {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card-border) transparent;
+    }
+    .table-container::-webkit-scrollbar { width: 4px; }
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--table-border);
+      z-index: 2;
+      transition: background var(--transition);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--table-border);
+      transition: background var(--transition);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--table-hover); }
+    tbody td {
+      padding: 7px 12px;
+      vertical-align: middle;
+      color: var(--text-primary);
+    }
+    .td-mono {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+    .td-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .td-dur {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .chip {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .chip-orange { background: rgba(242,110,50,0.12); color: var(--orange); }
+    .chip-green  { background: rgba(34,197,94,0.12);  color: #16a34a; }
+    .chip-teal   { background: rgba(40,161,190,0.12); color: var(--teal); }
+    [data-theme="dark"] .chip-green { color: #4ade80; }
+
+    /* ── TAB 5: INSIGHTS ───────────────────────────────────── */
+    #tab-insights {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .insights-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+    .insight-big-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      border-left: 4px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: background var(--transition), border-color var(--transition);
+      overflow: hidden;
+    }
+    .insight-big-card.green  { border-left-color: var(--green); }
+    .insight-big-card.red    { border-left-color: var(--red); }
+    .insight-big-card.amber  { border-left-color: var(--amber); }
+
+    .insight-big-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .insight-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+    .insight-icon.green  { background: rgba(34,197,94,0.1); }
+    .insight-icon.red    { background: rgba(239,68,68,0.1); }
+    .insight-icon.amber  { background: rgba(245,158,11,0.1); }
+
+    .insight-big-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .insight-big-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .insight-action {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--card-border);
+      padding-top: 8px;
+      line-height: 1.5;
+    }
+    .action-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 3px;
+    }
+    .action-label.green  { color: var(--green); }
+    .action-label.red    { color: var(--red); }
+    .action-label.amber  { color: var(--amber); }
+
+    .methodology-strip {
+      flex-shrink: 0;
+      background: var(--pill-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      transition: background var(--transition);
+    }
+
+    /* ── GLOSARIO ──────────────────────────────────────────── */
+    .glosario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .glosario-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .glosario-section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 4px;
+    }
+    .glosario-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .glosario-term {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .glosario-def {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .glosario-def strong { color: var(--text-primary); }
+    .glosario-example {
+      margin-top: 6px;
+      font-size: 11px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* ── SCROLLBAR STYLES ──────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── NAV ─────────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-logo">
+      <img src="assets/logo-neuron.png" alt="Neuron AI" />
+      <span class="nav-logo-text">Accuracy Monitor</span>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-tabs">
+      <button class="tab-btn" data-tab="resumen">Resumen</button>
+      <button class="tab-btn" data-tab="label">Por Label</button>
+      <button class="tab-btn active" data-tab="matrix">Confusion Matrix</button>
+      <button class="tab-btn" data-tab="errores">Errores</button>
+      <button class="tab-btn" data-tab="insights">Insights</button>
+      <button class="tab-btn" data-tab="glosario">Glosario</button>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema">
+      <span class="theme-icon" id="themeIcon">☀️</span>
+      <span id="themeLabel">Claro</span>
+    </button>
+  </nav>
+
+  <!-- ── TAB CONTENT ──────────────────────────────────────── -->
+  <div class="tab-content">
+
+    <!-- ── TAB 1: RESUMEN ──────────────────────────────────── -->
+    <div class="tab-panel" id="tab-resumen">
+      <div class="section-header">
+        <div class="section-title">Accuracy Monitor</div>
+        <div class="section-sub" id="resumenSub">—</div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card orange">
+          <div class="kpi-accent orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-value" id="kpiRetellValue">—</div>
+            <div class="kpi-label">Retell accuracy</div>
+            <div class="kpi-sub" id="kpiRetellSub">—</div>
+          </div>
+        </div>
+        <div class="kpi-card teal">
+          <div class="kpi-accent teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-value" id="kpiLlamaValue">—</div>
+            <div class="kpi-label">Llama accuracy</div>
+            <div class="kpi-sub" id="kpiLlamaSub">—</div>
+          </div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-accent purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-value" id="kpiKappaValue">—</div>
+            <div class="kpi-label">Fleiss kappa</div>
+            <div class="kpi-sub" id="kpiKappaSub">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card resumen-chart-card">
+        <div class="card-inner">
+          <div class="card-title">Accuracy de Retell por label</div>
+          <div class="chart-wrap">
+            <canvas id="chartResumen"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: POR LABEL ─────────────────────────────────── -->
+    <div class="tab-panel" id="tab-label">
+      <div class="label-left">
+        <div class="card label-chart-card">
+          <div class="card-inner">
+            <div class="card-title">Precision por label — Retell vs Llama</div>
+            <div class="chart-wrap">
+              <canvas id="chartPrecision"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card label-chart-card">
+          <div class="card-inner">
+            <div class="card-title">Recall por label — Retell vs Llama</div>
+            <div class="chart-wrap">
+              <canvas id="chartRecall"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-right">
+        <div class="card-title" style="padding: 0 2px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary);">Errores sistematicos de Retell</div>
+        <div id="labelInsightCards"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: CONFUSION MATRIX ─────────────────────────────── -->
+    <div class="tab-panel active" id="tab-matrix">
+      <div class="section-header">
+        <div class="section-title">Confusion Matrix</div>
+        <div class="section-sub" id="matrixSub">—</div>
+      </div>
+
+      <div class="matrix-controls">
+        <div class="matrix-toggle-row" id="matrixToggleRow"></div>
+        <div class="matrix-stats" id="matrixStats"></div>
+      </div>
+
+      <div class="card matrix-card">
+        <div class="card-inner">
+          <div class="matrix-grid-wrap">
+            <div class="matrix-grid" id="matrixGrid"></div>
+            <div class="matrix-axis-row"><span class="matrix-axis-label">→ Predicción del modelo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="matrix-explainer">
+        <strong>Como leer:</strong> cada fila representa el label real (ground truth segun Claude Opus 4.6), y cada columna lo que el modelo predijo. Los numeros en la diagonal son aciertos; fuera de la diagonal son errores. La intensidad del color naranja indica cantidad de llamadas en esa celda. Hover sobre cualquier celda para ver precision, recall y F1 del label.
+      </div>
+
+      <div class="matrix-tooltip" id="matrixTooltip"></div>
+    </div>
+
+    <!-- ── TAB 3: ERRORES ────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-errores">
+      <div class="errores-header">
+        <div class="section-title">Errores de clasificacion</div>
+        <div class="section-sub" id="erroresSub">—</div>
+      </div>
+
+      <div class="card errores-card">
+        <div class="card-inner">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Call ID</th>
+                  <th>Retell dice</th>
+                  <th>Deberia ser</th>
+                  <th>Llama dice</th>
+                  <th>Duracion</th>
+                </tr>
+              </thead>
+              <tbody id="erroresTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 5: INSIGHTS ───────────────────────────────────── -->
+    <div class="tab-panel" id="tab-insights">
+      <div class="section-header">
+        <div class="section-title">Insights y recomendaciones</div>
+        <div class="section-sub">Hallazgos clave del benchmark &middot; Datos demo</div>
+      </div>
+
+      <div class="insights-grid" id="insightsGrid"></div>
+
+      <div class="methodology-strip" id="methodologyStrip">—</div>
+    </div>
+
+    <!-- ── TAB 5: GLOSARIO ────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-glosario">
+      <div class="section-header">
+        <div class="section-title">Glosario</div>
+        <div class="section-sub">Referencia rapida para explicar cada metrica y concepto del dashboard</div>
+      </div>
+
+      <div class="glosario-grid">
+        <div class="glosario-section">
+          <div class="glosario-section-title">Metricas principales</div>
+
+          <div class="glosario-item">
+            <div class="glosario-term">Accuracy (precision global)</div>
+            <div class="glosario-def">De cada 100 llamadas, cuantas fueron clasificadas correctamente. Si un modelo tiene <strong>65% accuracy</strong>, significa que 65 de cada 100 labels son correctos y 35 son errores.</div>
+            <div class="glosario-example">Ejemplo: "Retell acierta en 65 de cada 100 llamadas del dataset limpio."</div>
+          </div>
+
+          <div class="glosario-item">
+            <div class="glosario-term">Precision (por label)</div>
+            <div class="glosario-def">Cuando el modelo dice "promised_payment", que tan seguido tiene razon. <strong>Precision alta = pocas falsas alarmas.</strong> Si precision de promised_payment es 100%, significa que cada vez que Retell dice "el cliente prometio pagar", efectivamente lo hizo.</div>
+            <div class="glosario-example">Ejemplo: "Cuando Retell dice que hay promesa de pago, tiene razon el 100% de las veces."</div>
+          </div>
+
+          <div class="glosario-item">
+            <div class="glosario-term">Recall (por label)</div>
+            <div class="glosario-def">De todas las llamadas que realmente son "refused", cuantas detecta Retell. <strong>Recall alto = no se le escapan casos.</strong> Si recall de refused es 62.5%, significa que Retell detecta solo 5 de cada 8 rechazos — se le escapan 3.</div>
+            <div class="glosario-example">Ejemplo: "De cada 8 rechazos reales, Retell solo detecta 5. Los otros 3 los clasifica como otra cosa."</div>
+          </div>
+
+          <div class="glosario-item">
+            <div class="glosario-term">F1 Score</div>
+            <div class="glosario-def">Combinacion de precision y recall en un solo numero. <strong>F1 alto = el modelo es bueno tanto en detectar como en no dar falsas alarmas.</strong> Va de 0 (pesimo) a 1 (perfecto). Arriba de 0.90 es excelente, 0.80-0.90 es bueno, abajo de 0.80 necesita mejora.</div>
+            <div class="glosario-example">Ejemplo: "El F1 de promised_payment es 0.97, o sea excelente. El de refused es 0.77, necesita mejora."</div>
+          </div>
+
+          <div class="glosario-item">
+            <div class="glosario-term">Fleiss Kappa</div>
+            <div class="glosario-def">Mide que tanto coinciden multiples evaluadores entre si, <strong>corrigiendo por coincidencia aleatoria</strong>. Si 3 personas tiran una moneda, a veces coinciden por suerte — kappa descuenta eso. Un kappa en el rango 0.61-0.80 (donde estamos) significa que los 3 labelers coinciden significativamente mas que por azar.</div>
+            <div class="glosario-example">0-0.20 = leve · 0.21-0.40 = aceptable · 0.41-0.60 = moderado · <strong>0.61-0.80 = substancial</strong> · 0.81-1.0 = casi perfecto</div>
+          </div>
+        </div>
+
+        <div class="glosario-section">
+          <div class="glosario-section-title">Labels (categorias de llamada)</div>
+
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:var(--green)">promised_payment</div>
+            <div class="glosario-def">El cliente se comprometio a pagar una cantidad en una fecha especifica. Es el <strong>label mas importante</strong> — determina forecast de cobranza.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:#94a3b8">no_answer</div>
+            <div class="glosario-def">La llamada no conecto con el deudor. Nadie contesto, o el telefono sono y colgo sin interaccion.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:var(--teal)">contacted</div>
+            <div class="glosario-def">Alguien contesto y hubo interaccion breve, pero <strong>sin resultado concreto</strong> (no prometio pagar, no rechazo, no pidio callback).</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:#eab308">voicemail</div>
+            <div class="glosario-def">La llamada fue al buzon de voz / contestadora automatica.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:#3b82f6">callback_requested</div>
+            <div class="glosario-def">El deudor pidio que le llamen despues (esta ocupado, quiere consultar, etc).</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:var(--red)">refused</div>
+            <div class="glosario-def">El deudor rechazo pagar explicitamente ("no voy a pagar", "no me importa").</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term" style="color:var(--purple)">other</div>
+            <div class="glosario-def">Cajón de sastre — la llamada no encaja en ninguna otra categoria. <strong>Un "other" alto indica que el modelo no sabe clasificar bien.</strong></div>
+          </div>
+
+          <div class="glosario-section-title" style="margin-top:16px">Metodologia</div>
+          <div class="glosario-item">
+            <div class="glosario-term">Claude como juez</div>
+            <div class="glosario-def">Usamos <strong>Claude Opus 4.6</strong> (el modelo mas avanzado de Anthropic, 1M tokens de contexto) para leer cada transcript completo y asignar el label correcto. Esos labels se tratan como "verdad" contra la que medimos a Retell y Llama. No es un humano, pero es el mejor juez automatizado disponible.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Retell / GPT-4 (produccion)</div>
+            <div class="glosario-def">El modelo que actualmente clasifica las llamadas en produccion. Es el que estamos <strong>evaluando</strong> — queremos saber si etiqueta bien.</div>
+          </div>
+          <div class="glosario-item">
+            <div class="glosario-term">Llama 4 Scout (auditor)</div>
+            <div class="glosario-def">Modelo de Meta, corrido via Groq (gratis). Sirve como <strong>segunda opinion independiente</strong>. Si Llama y Claude coinciden pero Retell no, es probable que Retell se equivoco.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-content -->
+</div><!-- /app -->
+
+<script id="dashboard-data" type="application/json">
+{"meta":{"total_calls":35,"date_range":{"start":"2026-03-25","end":"2026-04-10"},"filters":["Excluidas llamadas del 2026-03-26 (bug de plataforma: 58 calls)","Excluidas llamadas donde Claude=no_answer (7 calls)"],"judge":"Claude Opus 4.6","labels":["callback_requested","contacted","other","promised_payment","qualified","refused","unqualified","voicemail"],"excluded_bug_date_count":58,"excluded_no_answer_count":7},"kpis":{"retell_accuracy":{"accuracy_pct":65.7,"correct":23,"total":35},"llama_accuracy":{"accuracy_pct":82.9,"correct":29,"total":35},"fleiss_kappa":{"value":0.652,"n_items":35,"n_raters":3,"interpretation":"substancial"}},"resumen_by_label":[{"label":"promised_payment","support":13,"accuracy":92.3},{"label":"voicemail","support":8,"accuracy":75.0},{"label":"contacted","support":4,"accuracy":0.0},{"label":"callback_requested","support":3,"accuracy":100.0},{"label":"refused","support":3,"accuracy":0.0},{"label":"other","support":2,"accuracy":50.0},{"label":"qualified","support":1,"accuracy":0.0},{"label":"unqualified","support":1,"accuracy":100.0}],"per_label_metrics":{"retell":{"labels":["callback_requested","contacted","other","promised_payment","qualified","refused","unqualified","voicemail"],"precision":[0.75,0.0,0.25,1.0,0.0,0.0,1.0,1.0],"recall":[1.0,0.0,0.5,0.923,0.0,0.0,1.0,0.75],"f1":[0.857,0.0,0.333,0.96,0.0,0.0,1.0,0.857]},"llama":{"labels":["callback_requested","contacted","other","promised_payment","qualified","refused","unqualified","voicemail"],"precision":[1.0,1.0,1.0,0.929,1.0,1.0,0.0,1.0],"recall":[0.667,0.75,0.5,1.0,1.0,1.0,0.0,0.75],"f1":[0.8,0.857,0.667,0.963,1.0,1.0,0.0,0.857]}},"confusion_matrices":{"retell_vs_claude":{"labeler":"retell","judge":"claude","labels":["callback_requested","contacted","other","promised_payment","qualified","refused","unqualified","voicemail"],"matrix":[[3,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,1,12,0,0,0,0],[1,0,0,0,0,0,0,0],[0,0,2,0,0,0,0,0],[0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,6]],"row_sums":[3,0,1,13,1,2,1,6],"col_sums":[4,0,4,12,0,0,1,6],"total":27,"correct":23,"accuracy":0.8519,"per_label":{"callback_requested":{"precision":0.75,"recall":1.0,"f1":0.857,"support":3},"contacted":{"precision":0.0,"recall":0.0,"f1":0.0,"support":0},"other":{"precision":0.25,"recall":1.0,"f1":0.4,"support":1},"promised_payment":{"precision":1.0,"recall":0.923,"f1":0.96,"support":13},"qualified":{"precision":0.0,"recall":0.0,"f1":0.0,"support":1},"refused":{"precision":0.0,"recall":0.0,"f1":0.0,"support":2},"unqualified":{"precision":1.0,"recall":1.0,"f1":1.0,"support":1},"voicemail":{"precision":1.0,"recall":1.0,"f1":1.0,"support":6}}},"llama_vs_claude":{"labeler":"llama","judge":"claude","labels":["callback_requested","contacted","other","promised_payment","qualified","refused","unqualified","voicemail"],"matrix":[[2,0,0,1,0,0,0,0],[0,3,0,0,0,0,1,0],[0,0,1,0,0,0,0,0],[0,0,0,13,0,0,0,0],[0,0,0,0,1,0,0,0],[0,0,0,0,0,3,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,6]],"row_sums":[3,4,1,13,1,3,0,6],"col_sums":[2,3,1,14,1,3,1,6],"total":31,"correct":29,"accuracy":0.9355,"per_label":{"callback_requested":{"precision":1.0,"recall":0.667,"f1":0.8,"support":3},"contacted":{"precision":1.0,"recall":0.75,"f1":0.857,"support":4},"other":{"precision":1.0,"recall":1.0,"f1":1.0,"support":1},"promised_payment":{"precision":0.929,"recall":1.0,"f1":0.963,"support":13},"qualified":{"precision":1.0,"recall":1.0,"f1":1.0,"support":1},"refused":{"precision":1.0,"recall":1.0,"f1":1.0,"support":3},"unqualified":{"precision":0.0,"recall":0.0,"f1":0.0,"support":0},"voicemail":{"precision":1.0,"recall":1.0,"f1":1.0,"support":6}}}},"errores":[{"date":"04/08","call_id":"call_562752e6d660083acc203011f5a","retell":"no_answer","claude":"contacted","llama":"contacted","dur":17},{"date":"04/08","call_id":"call_512c0a2c68d306f6c61e94f17cf","retell":"no_answer","claude":"contacted","llama":"contacted","dur":18},{"date":"04/07","call_id":"call_f1950ff133b31ca719afba80bf1","retell":"other","claude":"refused","llama":"refused","dur":106},{"date":"04/04","call_id":"call_2ad6ca84ccfb4009db662ab8740","retell":"no_answer","claude":"voicemail","llama":"no_answer","dur":3},{"date":"04/02","call_id":"call_bd90d3d387b9d07a97f6fc830e7","retell":"no_answer","claude":"other","llama":"no_answer","dur":36},{"date":"04/02","call_id":"call_8e9755947eb615636fdfed1c01f","retell":"no_answer","claude":"contacted","llama":"unqualified","dur":11},{"date":"03/31","call_id":"call_b3d3b639c7e10722d43ec09a591","retell":"no_answer","claude":"voicemail","llama":"no_answer","dur":53},{"date":"03/31","call_id":"call_187e34953d81b84ea070bdf1a79","retell":"other","claude":"promised_payment","llama":"promised_payment","dur":75},{"date":"03/30","call_id":"call_a810a92df1feeb3d8e4bfa25eae","retell":"callback_requested","claude":"qualified","llama":"qualified","dur":173},{"date":"03/30","call_id":"call_bc300df25bce9bf5b6a43264ccf","retell":"other","claude":"refused","llama":"refused","dur":242},{"date":"03/27","call_id":"call_187742498cac123ff359b64fe4a","retell":"no_answer","claude":"contacted","llama":"contacted","dur":16},{"date":"03/25","call_id":"call_5732869207e783a9bbb98868389","retell":"no_answer","claude":"refused","llama":"refused","dur":37}],"kappa":{"retell_vs_llama":0.609,"retell_vs_claude":0.58,"llama_vs_claude":0.782}}
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════════════ */
+const html = document.documentElement;
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon   = document.getElementById('themeIcon');
+const themeLabel  = document.getElementById('themeLabel');
+
+function applyTheme(dark) {
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeIcon.textContent  = dark ? '🌙' : '☀️';
+  themeLabel.textContent = dark ? 'Oscuro' : 'Claro';
+  localStorage.setItem('neuron-theme', dark ? 'dark' : 'light');
+}
+
+const savedTheme = localStorage.getItem('neuron-theme');
+if (savedTheme === 'dark') applyTheme(true);
+
+themeToggle.addEventListener('click', () => {
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  applyTheme(!isDark);
+  // Recreate all charts on theme toggle
+  setTimeout(() => { buildAllCharts(); }, 50);
+});
+
+/* ═══════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════ */
+const tabBtns   = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+let activeTab   = 'matrix';
+
+/* ═══════════════════════════════════════════════════════════
+   CONFUSION MATRIX (HTML nativo, carga desde JSON)
+═══════════════════════════════════════════════════════════ */
+let matrixData = null;
+let activeMatrixKey = null;
+
+const matrixToggleRow = document.getElementById('matrixToggleRow');
+const matrixGrid = document.getElementById('matrixGrid');
+const matrixStats = document.getElementById('matrixStats');
+const matrixTooltip = document.getElementById('matrixTooltip');
+
+function humanLabelerName(name) {
+  const map = {
+    retell: 'Retell',
+    llama: 'Llama 4 Scout',
+    gemini: 'Gemini',
+    claude: 'Claude Opus 4.6',
+  };
+  return map[name] || name;
+}
+
+let dashboardData = null;
+
+function loadDashboardData() {
+  const embed = document.getElementById('dashboard-data');
+  if (embed && embed.textContent.trim()) {
+    try {
+      dashboardData = JSON.parse(embed.textContent);
+      return true;
+    } catch (e) {
+      console.error('Error parseando dashboard-data embed:', e);
+    }
+  }
+  return false;
+}
+
+function loadMatrixData() {
+  if (!dashboardData) {
+    matrixGrid.innerHTML = '<div style="padding:20px; color:var(--text-secondary);">No se pudo cargar dashboard-data embed.</div>';
+    return;
+  }
+  // Adaptar a la estructura esperada por el renderer de matriz
+  matrixData = { matrices: dashboardData.confusion_matrices };
+  buildMatrixToggles();
+  const firstKey = Object.keys(matrixData.matrices)[0];
+  if (firstKey) renderMatrix(firstKey);
+}
+
+function buildMatrixToggles() {
+  matrixToggleRow.innerHTML = '';
+  const keys = Object.keys(matrixData.matrices);
+  keys.forEach((key, idx) => {
+    const m = matrixData.matrices[key];
+    const btn = document.createElement('button');
+    btn.className = 'matrix-btn' + (idx === 0 ? ' active' : '');
+    btn.dataset.matrixKey = key;
+    btn.textContent = humanLabelerName(m.labeler) + ' vs ' + humanLabelerName(m.judge);
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.matrix-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMatrix(key);
+    });
+    matrixToggleRow.appendChild(btn);
+  });
+}
+
+function renderMatrix(key) {
+  activeMatrixKey = key;
+  const m = matrixData.matrices[key];
+  if (!m) return;
+
+  // Stats header
+  const accuracyPct = (m.accuracy * 100).toFixed(1);
+  matrixStats.innerHTML = `
+    <span>Accuracy <span class="matrix-stat-value">${accuracyPct}%</span></span>
+    <span>Correctos <span class="matrix-stat-value">${m.correct}/${m.total}</span></span>
+    <span>Labels <span class="matrix-stat-value">${m.labels.length}</span></span>
+  `;
+
+  // Build grid
+  const n = m.labels.length;
+  const maxVal = Math.max(...m.matrix.flat());
+  // Grid: corner + n column headers, then n rows of (row-header + n cells)
+  matrixGrid.style.gridTemplateColumns = `auto repeat(${n}, minmax(48px, 1fr))`;
+  matrixGrid.innerHTML = '';
+
+  // Top-left corner
+  const corner = document.createElement('div');
+  corner.className = 'matrix-cell corner';
+  matrixGrid.appendChild(corner);
+
+  // Column headers (predicted)
+  m.labels.forEach(label => {
+    const th = document.createElement('div');
+    th.className = 'matrix-cell header col';
+    th.textContent = label;
+    matrixGrid.appendChild(th);
+  });
+
+  // Rows
+  m.matrix.forEach((row, i) => {
+    // Row header
+    const rh = document.createElement('div');
+    rh.className = 'matrix-cell header';
+    rh.style.justifyContent = 'flex-end';
+    rh.style.paddingRight = '10px';
+    rh.textContent = m.labels[i];
+    matrixGrid.appendChild(rh);
+
+    // Data cells
+    row.forEach((val, j) => {
+      const cell = document.createElement('div');
+      const isDiag = i === j;
+      cell.className = 'matrix-cell data' + (isDiag ? ' diagonal' : '');
+
+      // Color intensity: orange for diagonal correct, red-tinted for off-diagonal errors
+      const intensity = maxVal > 0 ? val / maxVal : 0;
+      if (val === 0) {
+        cell.style.background = 'var(--pill-bg)';
+        cell.style.color = 'var(--text-muted)';
+      } else if (isDiag) {
+        // Orange gradient for diagonal
+        const alpha = 0.15 + intensity * 0.75;
+        cell.style.background = `rgba(242, 110, 50, ${alpha})`;
+        if (intensity > 0.5) cell.style.color = '#ffffff';
+      } else {
+        // Red-tinted for errors
+        const alpha = 0.12 + intensity * 0.5;
+        cell.style.background = `rgba(239, 68, 68, ${alpha})`;
+        if (intensity > 0.6) cell.style.color = '#ffffff';
+      }
+
+      cell.textContent = val;
+      cell.dataset.trueLabel = m.labels[i];
+      cell.dataset.predLabel = m.labels[j];
+      cell.dataset.value = val;
+      cell.dataset.rowTotal = m.row_sums[i];
+      cell.dataset.colTotal = m.col_sums[j];
+      cell.dataset.isDiag = isDiag;
+
+      cell.addEventListener('mouseenter', showMatrixTooltip);
+      cell.addEventListener('mousemove', moveMatrixTooltip);
+      cell.addEventListener('mouseleave', hideMatrixTooltip);
+      matrixGrid.appendChild(cell);
+    });
+  });
+}
+
+function showMatrixTooltip(e) {
+  const cell = e.currentTarget;
+  const m = matrixData.matrices[activeMatrixKey];
+  const trueL = cell.dataset.trueLabel;
+  const predL = cell.dataset.predLabel;
+  const val = parseInt(cell.dataset.value);
+  const rowTotal = parseInt(cell.dataset.rowTotal);
+  const isDiag = cell.dataset.isDiag === 'true';
+  const perLabel = m.per_label[trueL];
+  const pctOfRow = rowTotal > 0 ? ((val / rowTotal) * 100).toFixed(1) : '0.0';
+
+  const title = isDiag
+    ? `Aciertos: <strong>${trueL}</strong>`
+    : `${trueL} clasificado como ${predL}`;
+
+  matrixTooltip.innerHTML = `
+    <div class="matrix-tooltip-title">${title}</div>
+    <div class="matrix-tooltip-row"><span>Llamadas</span><strong>${val}</strong></div>
+    <div class="matrix-tooltip-row"><span>% de ${trueL} real</span><strong>${pctOfRow}%</strong></div>
+    <div class="matrix-tooltip-row"><span>Support ${trueL}</span><strong>${perLabel.support}</strong></div>
+    <div class="matrix-tooltip-row"><span>Precision ${trueL}</span><strong>${(perLabel.precision * 100).toFixed(1)}%</strong></div>
+    <div class="matrix-tooltip-row"><span>Recall ${trueL}</span><strong>${(perLabel.recall * 100).toFixed(1)}%</strong></div>
+    <div class="matrix-tooltip-row"><span>F1 ${trueL}</span><strong>${perLabel.f1.toFixed(3)}</strong></div>
+  `;
+  matrixTooltip.classList.add('visible');
+  moveMatrixTooltip(e);
+}
+
+function moveMatrixTooltip(e) {
+  const pad = 12;
+  const rect = matrixTooltip.getBoundingClientRect();
+  let x = e.clientX + pad;
+  let y = e.clientY + pad;
+  if (x + rect.width > window.innerWidth - pad) x = e.clientX - rect.width - pad;
+  if (y + rect.height > window.innerHeight - pad) y = e.clientY - rect.height - pad;
+  matrixTooltip.style.left = x + 'px';
+  matrixTooltip.style.top = y + 'px';
+}
+
+function hideMatrixTooltip() {
+  matrixTooltip.classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   POPULATE STATIC SECTIONS FROM dashboardData
+═══════════════════════════════════════════════════════════ */
+function populateStaticSections() {
+  if (!dashboardData) return;
+  const d = dashboardData;
+
+  // Formateador de fechas: 2026-03-25 -> "Marzo 25"
+  const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const [y, m, dd] = iso.split('-');
+    return `${MONTHS_ES[parseInt(m)-1]} ${parseInt(dd)}`;
+  }
+  const dateRange = `${fmtDate(d.meta.date_range.start)} – ${fmtDate(d.meta.date_range.end)}, ${d.meta.date_range.start.slice(0,4)}`;
+
+  // Tab Resumen header
+  const resumenSub = document.getElementById('resumenSub');
+  if (resumenSub) {
+    resumenSub.innerHTML = `Dataset limpio &middot; <strong>${d.meta.total_calls} llamadas</strong> &middot; ${dateRange} &middot; Juez: ${d.meta.judge} &middot; <span style="color:var(--amber)">Excluye bug ${d.meta.excluded_bug_date_count} calls del 26-mar + ${d.meta.excluded_no_answer_count} no_answer</span>`;
+  }
+
+  // KPIs
+  const r = d.kpis.retell_accuracy;
+  const l = d.kpis.llama_accuracy;
+  const k = d.kpis.fleiss_kappa;
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setText('kpiRetellValue', `${r.accuracy_pct}%`);
+  setText('kpiRetellSub', `${r.correct} de ${r.total} labels correctos`);
+  setText('kpiLlamaValue', `${l.accuracy_pct}%`);
+  setText('kpiLlamaSub', `${l.correct} de ${l.total} labels correctos`);
+  setText('kpiKappaValue', `.${String(k.value).split('.')[1]}`);
+  setText('kpiKappaSub', `${k.interpretation} agreement · ${k.n_raters} labelers · n=${k.n_items}`);
+
+  // Matrix tab subtitle
+  const matrixSub = document.getElementById('matrixSub');
+  if (matrixSub) {
+    matrixSub.innerHTML = `Ground truth: ${d.meta.judge} &middot; ${d.meta.total_calls} llamadas (dataset limpio)`;
+  }
+
+  // Errores tab subtitle
+  const erroresSub = document.getElementById('erroresSub');
+  if (erroresSub) {
+    erroresSub.innerHTML = `${d.errores.length} llamadas donde Retell &ne; Claude (juez) &middot; Ordenadas por fecha descendente`;
+  }
+
+  // Per-label insight cards (Tab Por Label)
+  const labelInsightCards = document.getElementById('labelInsightCards');
+  if (labelInsightCards) {
+    const retell = d.per_label_metrics.retell;
+    const cards = [];
+    // Find worst recall labels for Retell (with support > 0)
+    const labelStats = retell.labels.map((lbl, i) => ({
+      label: lbl,
+      precision: retell.precision[i],
+      recall: retell.recall[i],
+      f1: retell.f1[i],
+      support: d.resumen_by_label.find(r => r.label === lbl)?.support || 0,
+    })).filter(s => s.support > 0);
+
+    // Top 3 worst F1 with support >= 2
+    const worst = labelStats.filter(s => s.support >= 2).sort((a, b) => a.f1 - b.f1).slice(0, 3);
+    // Best: promised_payment or similar
+    const best = labelStats.filter(s => s.support >= 5).sort((a, b) => b.f1 - a.f1)[0];
+
+    worst.forEach(s => {
+      const color = s.recall < 0.5 ? 'red' : 'amber';
+      const title = s.recall === 0 ? `"${s.label}" invisible` : `"${s.label}" sub-detectado`;
+      cards.push(`
+        <div class="insight-card ${color}">
+          <div class="insight-badge ${color}">${s.label} &mdash; recall ${(s.recall*100).toFixed(0)}%</div>
+          <div class="insight-title">${title}</div>
+          <div class="insight-body">Retell detecta ${Math.round(s.recall * s.support)} de ${s.support} ${s.label}. ${s.recall === 0 ? 'No lo detecta nunca.' : 'Los demás los clasifica en otra categoría.'}</div>
+        </div>
+      `);
+    });
+
+    if (best) {
+      cards.push(`
+        <div class="insight-card green">
+          <div class="insight-badge green">${best.label} &mdash; F1 ${best.f1.toFixed(2)}</div>
+          <div class="insight-title">Label crítico sólido</div>
+          <div class="insight-body">F1 de ${best.f1.toFixed(2)} en ${best.label}. El label más importante funciona bien (n=${best.support}).</div>
+        </div>
+      `);
+    }
+
+    labelInsightCards.innerHTML = cards.join('');
+  }
+
+  // Big Insights cards (Tab Insights)
+  const insightsGrid = document.getElementById('insightsGrid');
+  if (insightsGrid) {
+    const retellAcc = r.accuracy_pct;
+    const llamaAcc = l.accuracy_pct;
+    const accColor = retellAcc >= 85 ? 'green' : retellAcc >= 70 ? 'amber' : 'red';
+    const accIcon = retellAcc >= 85 ? '✅' : retellAcc >= 70 ? '⚠️' : '🔴';
+    const accTitle = retellAcc >= 85
+      ? 'El labeling de producción funciona razonablemente'
+      : retellAcc >= 70
+        ? 'El labeling funciona pero tiene gaps importantes'
+        : 'El labeling de producción necesita mejoras significativas';
+
+    const retellPromised = d.per_label_metrics.retell.f1[d.per_label_metrics.retell.labels.indexOf('promised_payment')] || 0;
+    const retellCallback = d.per_label_metrics.retell.f1[d.per_label_metrics.retell.labels.indexOf('callback_requested')] || 0;
+
+    const cards = [];
+    cards.push(`
+      <div class="insight-big-card ${accColor}">
+        <div class="insight-big-header">
+          <div class="insight-icon ${accColor}">${accIcon}</div>
+          <div class="insight-big-title">${accTitle}</div>
+        </div>
+        <div class="insight-big-body">
+          ${retellAcc}% accuracy general sobre dataset limpio (${r.total} llamadas). Labels críticos: promised_payment F1=${retellPromised.toFixed(2)}, callback_requested F1=${retellCallback.toFixed(2)}. Llama 4 Scout alcanza ${llamaAcc}% — diferencia relevante vs Retell.
+        </div>
+        <div class="insight-action">
+          <div class="action-label ${accColor}">Acción recomendada</div>
+          ${retellAcc >= 85
+            ? 'Mantener monitoreo continuo. Threshold para producción: 90%+ en labels críticos.'
+            : 'Revisar prompt de Retell — hay labels con F1=0. Considerar Llama como alternativa (mejor accuracy y gratis vía Groq).'}
+        </div>
+      </div>
+    `);
+
+    // Insight 2: dynamic from worst label
+    const retellStats = d.per_label_metrics.retell.labels.map((lbl, i) => ({
+      label: lbl,
+      recall: d.per_label_metrics.retell.recall[i],
+      support: d.resumen_by_label.find(r => r.label === lbl)?.support || 0,
+    })).filter(s => s.support >= 2);
+    const worstByRecall = retellStats.sort((a, b) => a.recall - b.recall)[0];
+    if (worstByRecall) {
+      cards.push(`
+        <div class="insight-big-card red">
+          <div class="insight-big-header">
+            <div class="insight-icon red">🔴</div>
+            <div class="insight-big-title">Retell falla sistemáticamente en "${worstByRecall.label}"</div>
+          </div>
+          <div class="insight-big-body">
+            De ${worstByRecall.support} llamadas reales de "${worstByRecall.label}", Retell detecta ${Math.round(worstByRecall.recall * worstByRecall.support)}. El recall es ${(worstByRecall.recall*100).toFixed(0)}%. En producción esto implica perder seguimiento de esas interacciones.
+          </div>
+          <div class="insight-action">
+            <div class="action-label red">Acción recomendada</div>
+            Refinar el prompt de clasificación de Retell para el label "${worstByRecall.label}" o migrar a Llama/Claude como clasificador principal.
+          </div>
+        </div>
+      `);
+    }
+
+    // Insight 3: Bug note
+    cards.push(`
+      <div class="insight-big-card amber">
+        <div class="insight-big-header">
+          <div class="insight-icon amber">ℹ️</div>
+          <div class="insight-big-title">Bug de plataforma del 26-mar detectado y excluido</div>
+        </div>
+        <div class="insight-big-body">
+          ${d.meta.excluded_bug_date_count} llamadas del 2026-03-26 fueron excluidas: la plataforma las clasificó por default como no_answer (campaign_id=NaN) aunque tenían transcripts reales. Este dataset filtrado refleja el performance verdadero del clasificador, no artefactos del bug.
+        </div>
+        <div class="insight-action">
+          <div class="action-label amber">Acción recomendada</div>
+          Confirmar con el dev que el bug de campaign_id ya está resuelto en producción. Re-correr benchmark sobre data post-fix para validar.
+        </div>
+      </div>
+    `);
+
+    insightsGrid.innerHTML = cards.join('');
+  }
+
+  // Methodology strip
+  const methodologyStrip = document.getElementById('methodologyStrip');
+  if (methodologyStrip) {
+    methodologyStrip.innerHTML = `<strong>Metodología:</strong> ${d.meta.judge} como juez de ground truth. Dataset filtrado: ${d.meta.total_calls} llamadas del ${dateRange}. Filtros aplicados: ${d.meta.filters.join('; ')}. ${d.errores.length} errores de Retell identificados para revisión.`;
+  }
+}
+
+loadDashboardData();
+populateStaticSections();
+loadMatrixData();
+
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    if (tab === activeTab) return;
+    activeTab = tab;
+    tabBtns.forEach(b => b.classList.toggle('active', b === btn));
+    tabPanels.forEach(p => {
+      p.classList.toggle('active', p.id === 'tab-' + tab);
+    });
+    // Give DOM a moment to render, then rebuild charts for active tab
+    setTimeout(() => buildChartsForTab(tab), 30);
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════
+   CHART REGISTRY — destroy before recreate
+═══════════════════════════════════════════════════════════ */
+const charts = {};
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THEME HELPERS
+═══════════════════════════════════════════════════════════ */
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+function isDark() { return html.getAttribute('data-theme') === 'dark'; }
+function gridColor()    { return isDark() ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'; }
+function labelColor()   { return isDark() ? '#c8c8c8' : '#6c757d'; }
+function tooltipBg()    { return isDark() ? '#1e1e22' : '#ffffff'; }
+function tooltipBorder(){ return isDark() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'; }
+
+const ORANGE = '#f26e32';
+const TEAL   = '#28a1be';
+const GREEN  = '#22c55e';
+const AMBER  = '#f59e0b';
+const RED    = '#ef4444';
+
+/* ═══════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════ */
+
+// Data derivada de dashboardData (embedded JSON)
+const resumenData = (dashboardData?.resumen_by_label || []).filter(r => r.support > 0);
+
+function barColor(acc) {
+  if (acc >= 90) return GREEN;
+  if (acc >= 70) return AMBER;
+  return RED;
+}
+
+// labelMetrics: solo incluir labels con support >= 2 para evitar % ruidosos
+const _labelsAll = dashboardData?.per_label_metrics?.retell?.labels || [];
+const _supportByLabel = {};
+(dashboardData?.resumen_by_label || []).forEach(r => { _supportByLabel[r.label] = r.support; });
+const _labelIdxKeep = _labelsAll.map((lbl, i) => ({ lbl, i, sup: _supportByLabel[lbl] || 0 }))
+                                 .filter(x => x.sup >= 2)
+                                 .sort((a, b) => b.sup - a.sup);
+
+const labelMetrics = dashboardData ? {
+  labels: _labelIdxKeep.map(x => x.lbl),
+  retellPrecision: _labelIdxKeep.map(x => dashboardData.per_label_metrics.retell.precision[x.i]),
+  retellRecall:    _labelIdxKeep.map(x => dashboardData.per_label_metrics.retell.recall[x.i]),
+  llamaPrecision:  _labelIdxKeep.map(x => dashboardData.per_label_metrics.llama.precision[x.i]),
+  llamaRecall:     _labelIdxKeep.map(x => dashboardData.per_label_metrics.llama.recall[x.i]),
+} : { labels: [], retellPrecision: [], retellRecall: [], llamaPrecision: [], llamaRecall: [] };
+
+const erroresData = dashboardData?.errores || [];
+
+/* ═══════════════════════════════════════════════════════════
+   BUILD ERRORS TABLE
+═══════════════════════════════════════════════════════════ */
+function buildErrorsTable() {
+  const tbody = document.getElementById('erroresTableBody');
+  tbody.innerHTML = '';
+  // Deduplicate by call_id
+  const seen = new Set();
+  const unique = erroresData.filter(r => {
+    if (seen.has(r.call_id + r.date)) return false;
+    seen.add(r.call_id + r.date);
+    return true;
+  });
+  unique.forEach(row => {
+    const tr = document.createElement('tr');
+    const truncId = row.call_id.length > 20 ? row.call_id.slice(0, 20) + '…' : row.call_id;
+    tr.innerHTML = `
+      <td class="td-date">${row.date}</td>
+      <td class="td-mono" title="${row.call_id}">${truncId}</td>
+      <td><span class="chip chip-orange">${row.retell}</span></td>
+      <td><span class="chip chip-green">${row.claude}</span></td>
+      <td><span class="chip chip-teal">${row.llama}</span></td>
+      <td class="td-dur">${row.dur}s</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART: RESUMEN (horizontal bar)
+═══════════════════════════════════════════════════════════ */
+function buildChartResumen() {
+  destroyChart('resumen');
+  const ctx = document.getElementById('chartResumen');
+  if (!ctx) return;
+
+  const labels   = resumenData.map(d => `${d.label}  (n=${d.support})`);
+  const values   = resumenData.map(d => d.accuracy);
+  const colors   = resumenData.map(d => barColor(d.accuracy));
+  const alphaClr = colors.map(c => c + 'cc');
+
+  charts['resumen'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Accuracy (%)',
+        data: values,
+        backgroundColor: alphaClr,
+        borderColor: colors,
+        borderWidth: 1.5,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg(),
+          borderColor: tooltipBorder(),
+          borderWidth: 1,
+          titleColor: isDark() ? '#f2f2f2' : '#1a1a1a',
+          bodyColor: isDark() ? '#c8c8c8' : '#6c757d',
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.x.toFixed(1)}%`
+          }
+        },
+        annotation: {
+          annotations: {
+            line70: {
+              type: 'line', scaleID: 'x', value: 70,
+              borderColor: AMBER + '99', borderWidth: 1.5, borderDash: [5, 4],
+              label: { content: '70%', display: true, position: 'start', color: AMBER,
+                       font: { size: 10, family: 'IBM Plex Mono' }, backgroundColor: 'transparent' }
+            },
+            line90: {
+              type: 'line', scaleID: 'x', value: 90,
+              borderColor: GREEN + '99', borderWidth: 1.5, borderDash: [5, 4],
+              label: { content: '90%', display: true, position: 'start', color: GREEN,
+                       font: { size: 10, family: 'IBM Plex Mono' }, backgroundColor: 'transparent' }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: 0, max: 105,
+          grid: { color: gridColor(), drawBorder: false },
+          ticks: {
+            color: labelColor(),
+            font: { family: 'IBM Plex Mono', size: 11 },
+            callback: v => v + '%'
+          },
+          border: { display: false }
+        },
+        y: {
+          grid: { display: false },
+          ticks: {
+            color: labelColor(),
+            font: { family: 'IBM Plex Mono', size: 11 },
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART: PRECISION (grouped bar)
+═══════════════════════════════════════════════════════════ */
+function buildChartPrecision() {
+  destroyChart('precision');
+  const ctx = document.getElementById('chartPrecision');
+  if (!ctx) return;
+
+  charts['precision'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labelMetrics.labels,
+      datasets: [
+        {
+          label: 'Retell',
+          data: labelMetrics.retellPrecision,
+          backgroundColor: ORANGE + 'bb',
+          borderColor: ORANGE,
+          borderWidth: 1.5,
+          borderRadius: 4,
+        },
+        {
+          label: 'Llama 4',
+          data: labelMetrics.llamaPrecision,
+          backgroundColor: TEAL + 'bb',
+          borderColor: TEAL,
+          borderWidth: 1.5,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: labelColor(),
+            font: { family: 'Poppins', size: 11 },
+            boxWidth: 10,
+            boxHeight: 10,
+            borderRadius: 3,
+          }
+        },
+        tooltip: {
+          backgroundColor: tooltipBg(),
+          borderColor: tooltipBorder(),
+          borderWidth: 1,
+          titleColor: isDark() ? '#f2f2f2' : '#1a1a1a',
+          bodyColor: isDark() ? '#c8c8c8' : '#6c757d',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: labelColor(), font: { family: 'IBM Plex Mono', size: 10 } },
+          border: { display: false }
+        },
+        y: {
+          min: 0, max: 1.05,
+          grid: { color: gridColor(), drawBorder: false },
+          ticks: {
+            color: labelColor(),
+            font: { family: 'IBM Plex Mono', size: 11 },
+            callback: v => (v * 100).toFixed(0) + '%'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART: RECALL (grouped bar)
+═══════════════════════════════════════════════════════════ */
+function buildChartRecall() {
+  destroyChart('recall');
+  const ctx = document.getElementById('chartRecall');
+  if (!ctx) return;
+
+  charts['recall'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labelMetrics.labels,
+      datasets: [
+        {
+          label: 'Retell',
+          data: labelMetrics.retellRecall,
+          backgroundColor: ORANGE + 'bb',
+          borderColor: ORANGE,
+          borderWidth: 1.5,
+          borderRadius: 4,
+        },
+        {
+          label: 'Llama 4',
+          data: labelMetrics.llamaRecall,
+          backgroundColor: TEAL + 'bb',
+          borderColor: TEAL,
+          borderWidth: 1.5,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: labelColor(),
+            font: { family: 'Poppins', size: 11 },
+            boxWidth: 10,
+            boxHeight: 10,
+            borderRadius: 3,
+          }
+        },
+        tooltip: {
+          backgroundColor: tooltipBg(),
+          borderColor: tooltipBorder(),
+          borderWidth: 1,
+          titleColor: isDark() ? '#f2f2f2' : '#1a1a1a',
+          bodyColor: isDark() ? '#c8c8c8' : '#6c757d',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: labelColor(), font: { family: 'IBM Plex Mono', size: 10 } },
+          border: { display: false }
+        },
+        y: {
+          min: 0, max: 1.05,
+          grid: { color: gridColor(), drawBorder: false },
+          ticks: {
+            color: labelColor(),
+            font: { family: 'IBM Plex Mono', size: 11 },
+            callback: v => (v * 100).toFixed(0) + '%'
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHART: TENDENCIA (dual-axis)
+═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   BUILD ALL / PER TAB
+═══════════════════════════════════════════════════════════ */
+function buildChartsForTab(tab) {
+  if (tab === 'resumen')   { buildChartResumen(); }
+  if (tab === 'label')     { buildChartPrecision(); buildChartRecall(); }
+}
+
+function buildAllCharts() {
+  buildChartResumen();
+  buildChartPrecision();
+  buildChartRecall();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildErrorsTable();
+  buildChartResumen(); // default tab
+});
+</script>
+</body>
+</html>

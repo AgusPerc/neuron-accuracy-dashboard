@@ -1,0 +1,673 @@
+{
+  "summary": {
+    "total_samples": 100,
+    "unanimous": 62,
+    "majority": 28,
+    "split": 10,
+    "retell_accuracy_vs_consensus": 0.78,
+    "retell_dollar_weighted_accuracy": 0.9369916093826495,
+    "fleiss_kappa": 0.632698385581276,
+    "total_debt": 2999600.5,
+    "total_promised": 1109790.5
+  },
+  "labeler_accuracy_vs_consensus": {
+    "retell": 78,
+    "llama": 87,
+    "claude": 77
+  },
+  "per_label_retell_accuracy": [
+    {
+      "label": "callback_requested",
+      "n": 10,
+      "confirmed": 8,
+      "accuracy_pct": 80.0,
+      "debt_at_stake": 105700.0
+    },
+    {
+      "label": "contacted",
+      "n": 1,
+      "confirmed": 1,
+      "accuracy_pct": 100.0,
+      "debt_at_stake": 10000.0
+    },
+    {
+      "label": "no_answer",
+      "n": 27,
+      "confirmed": 15,
+      "accuracy_pct": 55.6,
+      "debt_at_stake": 1188200.0
+    },
+    {
+      "label": "other",
+      "n": 10,
+      "confirmed": 2,
+      "accuracy_pct": 20.0,
+      "debt_at_stake": 129000.0
+    },
+    {
+      "label": "promised_payment",
+      "n": 37,
+      "confirmed": 37,
+      "accuracy_pct": 100.0,
+      "debt_at_stake": 1393500.5
+    },
+    {
+      "label": "refused",
+      "n": 5,
+      "confirmed": 5,
+      "accuracy_pct": 100.0,
+      "debt_at_stake": 48200.0
+    },
+    {
+      "label": "unqualified",
+      "n": 1,
+      "confirmed": 1,
+      "accuracy_pct": 100.0,
+      "debt_at_stake": 20000.0
+    },
+    {
+      "label": "voicemail",
+      "n": 9,
+      "confirmed": 9,
+      "accuracy_pct": 100.0,
+      "debt_at_stake": 105000.0
+    }
+  ],
+  "daily": [
+    {
+      "date": "2026-03-25",
+      "calls": 3.0,
+      "unanimous": 2.0,
+      "majority": 1.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 66.66666666666666,
+      "debt": 45000.0
+    },
+    {
+      "date": "2026-03-26",
+      "calls": 58.0,
+      "unanimous": 38.0,
+      "majority": 12.0,
+      "split": 8.0,
+      "retell_accuracy_pct": 79.3103448275862,
+      "debt": 609900.0
+    },
+    {
+      "date": "2026-03-27",
+      "calls": 4.0,
+      "unanimous": 3.0,
+      "majority": 1.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 75.0,
+      "debt": 47500.0
+    },
+    {
+      "date": "2026-03-30",
+      "calls": 5.0,
+      "unanimous": 1.0,
+      "majority": 3.0,
+      "split": 1.0,
+      "retell_accuracy_pct": 40.0,
+      "debt": 49000.0
+    },
+    {
+      "date": "2026-03-31",
+      "calls": 7.0,
+      "unanimous": 5.0,
+      "majority": 2.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 85.71428571428571,
+      "debt": 55700.5
+    },
+    {
+      "date": "2026-04-01",
+      "calls": 1.0,
+      "unanimous": 0.0,
+      "majority": 1.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 100.0,
+      "debt": 20000.0
+    },
+    {
+      "date": "2026-04-02",
+      "calls": 6.0,
+      "unanimous": 4.0,
+      "majority": 1.0,
+      "split": 1.0,
+      "retell_accuracy_pct": 83.33333333333334,
+      "debt": 22500.0
+    },
+    {
+      "date": "2026-04-04",
+      "calls": 2.0,
+      "unanimous": 1.0,
+      "majority": 1.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 100.0,
+      "debt": 2000000.0
+    },
+    {
+      "date": "2026-04-07",
+      "calls": 5.0,
+      "unanimous": 2.0,
+      "majority": 3.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 80.0,
+      "debt": 55000.0
+    },
+    {
+      "date": "2026-04-08",
+      "calls": 8.0,
+      "unanimous": 5.0,
+      "majority": 3.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 75.0,
+      "debt": 85000.0
+    },
+    {
+      "date": "2026-04-10",
+      "calls": 1.0,
+      "unanimous": 1.0,
+      "majority": 0.0,
+      "split": 0.0,
+      "retell_accuracy_pct": 100.0,
+      "debt": 10000.0
+    }
+  ],
+  "labels_universe": [
+    "callback_requested",
+    "contacted",
+    "no_answer",
+    "not_interested",
+    "other",
+    "promised_payment",
+    "qualified",
+    "refused",
+    "unqualified",
+    "voicemail"
+  ],
+  "flagged_calls": [
+    {
+      "call_id": "call_2ad6ca84ccfb4009db662ab8740",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "voicemail",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 1000000.0,
+      "call_duration": 3.0
+    },
+    {
+      "call_id": "call_0fc58eb3e7351312ef121f877c9",
+      "label_retell": "unqualified",
+      "label_llama": "not_interested",
+      "label_claude": "unqualified",
+      "consensus": "unqualified",
+      "tier": "majority",
+      "debt": 20000.0,
+      "call_duration": 38.0
+    },
+    {
+      "call_id": "call_b3d3b639c7e10722d43ec09a591",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "voicemail",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 53.0
+    },
+    {
+      "call_id": "call_5516a354fab32fe73871dbfe648",
+      "label_retell": "no_answer",
+      "label_llama": "refused",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 31.0
+    },
+    {
+      "call_id": "call_562752e6d660083acc203011f5a",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 17.0
+    },
+    {
+      "call_id": "call_a930a8e29887176d61b45db7338",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 50.0
+    },
+    {
+      "call_id": "call_52fac5d3e63c1c1f705dd18c865",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 35.0
+    },
+    {
+      "call_id": "call_5732869207e783a9bbb98868389",
+      "label_retell": "no_answer",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "consensus": "refused",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 37.0
+    },
+    {
+      "call_id": "call_5f97297c6f42fe7e557fc9a0f83",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 108.0
+    },
+    {
+      "call_id": "call_5e4b21739a5c81079e608445607",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 598.0
+    },
+    {
+      "call_id": "call_94f8ef35a74cf3fbd56b9a4aaf7",
+      "label_retell": "promised_payment",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "promised_payment",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 288.0
+    },
+    {
+      "call_id": "call_bf974929e7d3ad8c2abd9933263",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 360.0
+    },
+    {
+      "call_id": "call_3ef6e12ef7b391fffb66ffe422f",
+      "label_retell": "other",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 65.0
+    },
+    {
+      "call_id": "call_187742498cac123ff359b64fe4a",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 16.0
+    },
+    {
+      "call_id": "call_d1fced832e72496736cea805068",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 90.0
+    },
+    {
+      "call_id": "call_e783cdf5353e85e5be87ee7bd30",
+      "label_retell": "promised_payment",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "promised_payment",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 224.0
+    },
+    {
+      "call_id": "call_e7cbd3fec0495b183232e4a35ad",
+      "label_retell": "callback_requested",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 15000.0,
+      "call_duration": 408.0
+    },
+    {
+      "call_id": "call_d0d094ee754e14149d33345194e",
+      "label_retell": "promised_payment",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "promised_payment",
+      "tier": "majority",
+      "debt": 15000.0,
+      "call_duration": 453.0
+    },
+    {
+      "call_id": "call_f8756867376ca427d0b3ad5cf12",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 15.0
+    },
+    {
+      "call_id": "call_b3e53a03111c4c6a141a01cd44c",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 27.0
+    },
+    {
+      "call_id": "call_f1950ff133b31ca719afba80bf1",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "consensus": "refused",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 106.0
+    },
+    {
+      "call_id": "call_512c0a2c68d306f6c61e94f17cf",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 18.0
+    },
+    {
+      "call_id": "call_af175568c6d209318ef8ca264bf",
+      "label_retell": "callback_requested",
+      "label_llama": "promised_payment",
+      "label_claude": "callback_requested",
+      "consensus": "callback_requested",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 191.0
+    },
+    {
+      "call_id": "call_3306fda373ce7f635349de61dd0",
+      "label_retell": "contacted",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 66.0
+    },
+    {
+      "call_id": "call_187e34953d81b84ea070bdf1a79",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "promised_payment",
+      "consensus": "promised_payment",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 75.0
+    },
+    {
+      "call_id": "call_a50dc019437b568785a6ded9d8a",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 10000.0,
+      "call_duration": 32.0
+    },
+    {
+      "call_id": "call_bc300df25bce9bf5b6a43264ccf",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "consensus": "refused",
+      "tier": "majority",
+      "debt": 9000.0,
+      "call_duration": 242.0
+    },
+    {
+      "call_id": "call_8a9bca2bef4e78ba622a78f58e1",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 12.0
+    },
+    {
+      "call_id": "call_8e9755947eb615636fdfed1c01f",
+      "label_retell": "no_answer",
+      "label_llama": "unqualified",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 0.0,
+      "call_duration": 11.0
+    },
+    {
+      "call_id": "call_bd90d3d387b9d07a97f6fc830e7",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "other",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 36.0
+    },
+    {
+      "call_id": "call_a810a92df1feeb3d8e4bfa25eae",
+      "label_retell": "callback_requested",
+      "label_llama": "qualified",
+      "label_claude": "qualified",
+      "consensus": "qualified",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 173.0
+    },
+    {
+      "call_id": "call_287e60768ae4091625f526a1a3c",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 11.0
+    },
+    {
+      "call_id": "call_b94b31530a9c1833ba549eebb40",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 16.0
+    },
+    {
+      "call_id": "call_94f183046052f768b89f195cef7",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "contacted",
+      "consensus": "no_answer",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 8.0
+    },
+    {
+      "call_id": "call_61fec23147742f2dc23604406ef",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 13.0
+    },
+    {
+      "call_id": "call_41d6e42774203205cc0dc0d4ade",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "consensus": "contacted",
+      "tier": "majority",
+      "debt": 0.0,
+      "call_duration": 10.0
+    },
+    {
+      "call_id": "call_68bcd9fc67fd6c1110e18571c60",
+      "label_retell": "no_answer",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 0.0,
+      "call_duration": 93.0
+    },
+    {
+      "call_id": "call_8702ee79d9817eb024fc61fe30e",
+      "label_retell": "no_answer",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "consensus": "no_consensus",
+      "tier": "split",
+      "debt": 0.0,
+      "call_duration": 85.0
+    }
+  ],
+  "confusion_matrix": {
+    "callback_requested": {
+      "callback_requested": 8,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "contacted": {
+      "callback_requested": 0,
+      "contacted": 1,
+      "no_answer": 7,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "no_answer": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 15,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "no_consensus": {
+      "callback_requested": 1,
+      "contacted": 0,
+      "no_answer": 4,
+      "other": 5,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "other": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 2,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "promised_payment": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 1,
+      "promised_payment": 37,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "qualified": {
+      "callback_requested": 1,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "refused": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 1,
+      "other": 2,
+      "promised_payment": 0,
+      "refused": 5,
+      "unqualified": 0,
+      "voicemail": 0
+    },
+    "unqualified": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 1,
+      "voicemail": 0
+    },
+    "voicemail": {
+      "callback_requested": 0,
+      "contacted": 0,
+      "no_answer": 0,
+      "other": 0,
+      "promised_payment": 0,
+      "refused": 0,
+      "unqualified": 0,
+      "voicemail": 9
+    }
+  }
+}

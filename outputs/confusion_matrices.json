@@ -1,0 +1,357 @@
+{
+  "judge": "claude",
+  "excluded_labels": [
+    "no_answer"
+  ],
+  "total_calls": 86,
+  "labels": [
+    "callback_requested",
+    "contacted",
+    "other",
+    "promised_payment",
+    "qualified",
+    "refused",
+    "unqualified",
+    "voicemail"
+  ],
+  "matrices": {
+    "retell_vs_claude": {
+      "labeler": "retell",
+      "judge": "claude",
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "matrix": [
+        [
+          9,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          37,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9
+        ]
+      ],
+      "row_sums": [
+        10,
+        3,
+        2,
+        39,
+        1,
+        7,
+        1,
+        9
+      ],
+      "col_sums": [
+        10,
+        1,
+        9,
+        37,
+        0,
+        5,
+        1,
+        9
+      ],
+      "total": 72,
+      "correct": 64,
+      "accuracy": 0.8888888888888888,
+      "per_label": {
+        "callback_requested": {
+          "precision": 0.9,
+          "recall": 0.9,
+          "f1": 0.9,
+          "support": 10
+        },
+        "contacted": {
+          "precision": 1.0,
+          "recall": 0.3333333333333333,
+          "f1": 0.5,
+          "support": 3
+        },
+        "other": {
+          "precision": 0.2222222222222222,
+          "recall": 1.0,
+          "f1": 0.3636363636363636,
+          "support": 2
+        },
+        "promised_payment": {
+          "precision": 1.0,
+          "recall": 0.9487179487179487,
+          "f1": 0.9736842105263158,
+          "support": 39
+        },
+        "qualified": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 1
+        },
+        "refused": {
+          "precision": 1.0,
+          "recall": 0.7142857142857143,
+          "f1": 0.8333333333333333,
+          "support": 7
+        },
+        "unqualified": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "voicemail": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 9
+        }
+      }
+    },
+    "llama_vs_claude": {
+      "labeler": "llama",
+      "judge": "claude",
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "matrix": [
+        [
+          7,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          0,
+          4,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          39,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9
+        ]
+      ],
+      "row_sums": [
+        10,
+        13,
+        2,
+        39,
+        1,
+        8,
+        0,
+        9
+      ],
+      "col_sums": [
+        7,
+        7,
+        2,
+        46,
+        1,
+        9,
+        1,
+        9
+      ],
+      "total": 82,
+      "correct": 73,
+      "accuracy": 0.8902439024390244,
+      "per_label": {
+        "callback_requested": {
+          "precision": 1.0,
+          "recall": 0.7,
+          "f1": 0.8235294117647058,
+          "support": 10
+        },
+        "contacted": {
+          "precision": 1.0,
+          "recall": 0.5384615384615384,
+          "f1": 0.7000000000000001,
+          "support": 13
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 2
+        },
+        "promised_payment": {
+          "precision": 0.8478260869565217,
+          "recall": 1.0,
+          "f1": 0.9176470588235294,
+          "support": 39
+        },
+        "qualified": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "refused": {
+          "precision": 0.8888888888888888,
+          "recall": 1.0,
+          "f1": 0.9411764705882353,
+          "support": 8
+        },
+        "unqualified": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0
+        },
+        "voicemail": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 9
+        }
+      }
+    }
+  }
+}

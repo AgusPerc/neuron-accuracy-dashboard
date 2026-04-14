@@ -1,0 +1,391 @@
+{
+  "judge": "claude_opus_4.6",
+  "retell": {
+    "accuracy": 0.77,
+    "accuracy_dollar_weighted": 0.6086145471705315,
+    "total_correct": 77,
+    "total": 100
+  },
+  "llama": {
+    "accuracy": 0.86,
+    "accuracy_dollar_weighted": 0.6232831672084332,
+    "total_correct": 86,
+    "total": 100
+  },
+  "per_label_retell": [
+    {
+      "label": "callback_requested",
+      "n": 10,
+      "correct": 9,
+      "accuracy_pct": 90.0,
+      "debt": 120700.0
+    },
+    {
+      "label": "contacted",
+      "n": 13,
+      "correct": 1,
+      "accuracy_pct": 7.7,
+      "debt": 80000.0
+    },
+    {
+      "label": "no_answer",
+      "n": 14,
+      "correct": 13,
+      "accuracy_pct": 92.9,
+      "debt": 133200.0
+    },
+    {
+      "label": "other",
+      "n": 3,
+      "correct": 2,
+      "accuracy_pct": 66.7,
+      "debt": 25000.0
+    },
+    {
+      "label": "promised_payment",
+      "n": 39,
+      "correct": 37,
+      "accuracy_pct": 94.9,
+      "debt": 1418500.5
+    },
+    {
+      "label": "qualified",
+      "n": 1,
+      "correct": 0,
+      "accuracy_pct": 0.0,
+      "debt": 0.0
+    },
+    {
+      "label": "refused",
+      "n": 8,
+      "correct": 5,
+      "accuracy_pct": 62.5,
+      "debt": 82200.0
+    },
+    {
+      "label": "unqualified",
+      "n": 1,
+      "correct": 1,
+      "accuracy_pct": 100.0,
+      "debt": 20000.0
+    },
+    {
+      "label": "voicemail",
+      "n": 11,
+      "correct": 9,
+      "accuracy_pct": 81.8,
+      "debt": 1120000.0
+    }
+  ],
+  "daily": [
+    {
+      "date": "2026-03-25",
+      "calls": 3.0,
+      "retell_correct": 2.0,
+      "retell_accuracy": 66.66666666666666,
+      "llama_correct": 3.0,
+      "llama_accuracy": 100.0,
+      "debt": 45000.0
+    },
+    {
+      "date": "2026-03-26",
+      "calls": 58.0,
+      "retell_correct": 47.0,
+      "retell_accuracy": 81.03448275862068,
+      "llama_correct": 51.0,
+      "llama_accuracy": 87.93103448275862,
+      "debt": 609900.0
+    },
+    {
+      "date": "2026-03-27",
+      "calls": 4.0,
+      "retell_correct": 3.0,
+      "retell_accuracy": 75.0,
+      "llama_correct": 4.0,
+      "llama_accuracy": 100.0,
+      "debt": 47500.0
+    },
+    {
+      "date": "2026-03-30",
+      "calls": 5.0,
+      "retell_correct": 3.0,
+      "retell_accuracy": 60.0,
+      "llama_correct": 4.0,
+      "llama_accuracy": 80.0,
+      "debt": 49000.0
+    },
+    {
+      "date": "2026-03-31",
+      "calls": 7.0,
+      "retell_correct": 5.0,
+      "retell_accuracy": 71.42857142857143,
+      "llama_correct": 6.0,
+      "llama_accuracy": 85.71428571428571,
+      "debt": 55700.5
+    },
+    {
+      "date": "2026-04-01",
+      "calls": 1.0,
+      "retell_correct": 1.0,
+      "retell_accuracy": 100.0,
+      "llama_correct": 0.0,
+      "llama_accuracy": 0.0,
+      "debt": 20000.0
+    },
+    {
+      "date": "2026-04-02",
+      "calls": 6.0,
+      "retell_correct": 4.0,
+      "retell_accuracy": 66.66666666666666,
+      "llama_correct": 4.0,
+      "llama_accuracy": 66.66666666666666,
+      "debt": 22500.0
+    },
+    {
+      "date": "2026-04-04",
+      "calls": 2.0,
+      "retell_correct": 1.0,
+      "retell_accuracy": 50.0,
+      "llama_correct": 1.0,
+      "llama_accuracy": 50.0,
+      "debt": 2000000.0
+    },
+    {
+      "date": "2026-04-07",
+      "calls": 5.0,
+      "retell_correct": 4.0,
+      "retell_accuracy": 80.0,
+      "llama_correct": 4.0,
+      "llama_accuracy": 80.0,
+      "debt": 55000.0
+    },
+    {
+      "date": "2026-04-08",
+      "calls": 8.0,
+      "retell_correct": 6.0,
+      "retell_accuracy": 75.0,
+      "llama_correct": 8.0,
+      "llama_accuracy": 100.0,
+      "debt": 85000.0
+    },
+    {
+      "date": "2026-04-10",
+      "calls": 1.0,
+      "retell_correct": 1.0,
+      "retell_accuracy": 100.0,
+      "llama_correct": 1.0,
+      "llama_accuracy": 100.0,
+      "debt": 10000.0
+    }
+  ],
+  "total_debt": 2999600.5,
+  "retell_errors": [
+    {
+      "call_id": "call_2ad6ca84ccfb4009db662ab8740",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "voicemail",
+      "debt": 1000000.0,
+      "call_duration": 3.0,
+      "date": "2026-04-04"
+    },
+    {
+      "call_id": "call_b3d3b639c7e10722d43ec09a591",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "voicemail",
+      "debt": 15000.0,
+      "call_duration": 53.0,
+      "date": "2026-03-31"
+    },
+    {
+      "call_id": "call_562752e6d660083acc203011f5a",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 15000.0,
+      "call_duration": 17.0,
+      "date": "2026-04-08"
+    },
+    {
+      "call_id": "call_a930a8e29887176d61b45db7338",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "contacted",
+      "debt": 15000.0,
+      "call_duration": 50.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_bf974929e7d3ad8c2abd9933263",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "promised_payment",
+      "debt": 15000.0,
+      "call_duration": 360.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_3ef6e12ef7b391fffb66ffe422f",
+      "label_retell": "other",
+      "label_llama": "no_answer",
+      "label_claude": "no_answer",
+      "debt": 15000.0,
+      "call_duration": 65.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_187742498cac123ff359b64fe4a",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 15000.0,
+      "call_duration": 16.0,
+      "date": "2026-03-27"
+    },
+    {
+      "call_id": "call_d1fced832e72496736cea805068",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "callback_requested",
+      "debt": 15000.0,
+      "call_duration": 90.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_5e4b21739a5c81079e608445607",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "debt": 15000.0,
+      "call_duration": 598.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_5732869207e783a9bbb98868389",
+      "label_retell": "no_answer",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "debt": 15000.0,
+      "call_duration": 37.0,
+      "date": "2026-03-25"
+    },
+    {
+      "call_id": "call_f1950ff133b31ca719afba80bf1",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "debt": 10000.0,
+      "call_duration": 106.0,
+      "date": "2026-04-07"
+    },
+    {
+      "call_id": "call_512c0a2c68d306f6c61e94f17cf",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 10000.0,
+      "call_duration": 18.0,
+      "date": "2026-04-08"
+    },
+    {
+      "call_id": "call_187e34953d81b84ea070bdf1a79",
+      "label_retell": "other",
+      "label_llama": "promised_payment",
+      "label_claude": "promised_payment",
+      "debt": 10000.0,
+      "call_duration": 75.0,
+      "date": "2026-03-31"
+    },
+    {
+      "call_id": "call_bc300df25bce9bf5b6a43264ccf",
+      "label_retell": "other",
+      "label_llama": "refused",
+      "label_claude": "refused",
+      "debt": 9000.0,
+      "call_duration": 242.0,
+      "date": "2026-03-30"
+    },
+    {
+      "call_id": "call_bd90d3d387b9d07a97f6fc830e7",
+      "label_retell": "no_answer",
+      "label_llama": "no_answer",
+      "label_claude": "other",
+      "debt": 0.0,
+      "call_duration": 36.0,
+      "date": "2026-04-02"
+    },
+    {
+      "call_id": "call_8e9755947eb615636fdfed1c01f",
+      "label_retell": "no_answer",
+      "label_llama": "unqualified",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 11.0,
+      "date": "2026-04-02"
+    },
+    {
+      "call_id": "call_a810a92df1feeb3d8e4bfa25eae",
+      "label_retell": "callback_requested",
+      "label_llama": "qualified",
+      "label_claude": "qualified",
+      "debt": 0.0,
+      "call_duration": 173.0,
+      "date": "2026-03-30"
+    },
+    {
+      "call_id": "call_b94b31530a9c1833ba549eebb40",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 16.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_287e60768ae4091625f526a1a3c",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 11.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_41d6e42774203205cc0dc0d4ade",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 10.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_61fec23147742f2dc23604406ef",
+      "label_retell": "no_answer",
+      "label_llama": "contacted",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 13.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_8702ee79d9817eb024fc61fe30e",
+      "label_retell": "no_answer",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 85.0,
+      "date": "2026-03-26"
+    },
+    {
+      "call_id": "call_68bcd9fc67fd6c1110e18571c60",
+      "label_retell": "no_answer",
+      "label_llama": "promised_payment",
+      "label_claude": "contacted",
+      "debt": 0.0,
+      "call_duration": 93.0,
+      "date": "2026-03-26"
+    }
+  ]
+}

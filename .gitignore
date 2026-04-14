@@ -1,9 +1,25 @@
 .env
 data/*.csv
 data/*.json
-outputs/
 __pycache__/
 *.pyc
 .venv/
 .claude/settings.local.json
 .scratch/
+
+# outputs: track only dashboard.html + assets/ + embedded JSON
+# ignore intermediate/backup files
+outputs/old_matrices/
+outputs/*.csv
+outputs/confusion_matrix_*.png
+outputs/f1_comparison.png
+outputs/REPORT.md
+outputs/accuracy_report.md
+
+# imagenes de trabajo (screenshots que pegaste durante debug)
+image.png
+image copy.png
+
+# prompts y data de sears (mantener locales, no deploy)
+prompt _sears_v1.txt
+scripts_agentes/

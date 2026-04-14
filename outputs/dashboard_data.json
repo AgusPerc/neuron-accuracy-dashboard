@@ -1,0 +1,615 @@
+{
+  "meta": {
+    "total_calls": 35,
+    "date_range": {
+      "start": "2026-03-25",
+      "end": "2026-04-10"
+    },
+    "filters": [
+      "Excluidas llamadas del 2026-03-26 (bug de plataforma: 58 calls)",
+      "Excluidas llamadas donde Claude=no_answer (7 calls)"
+    ],
+    "judge": "Claude Opus 4.6",
+    "labels": [
+      "callback_requested",
+      "contacted",
+      "other",
+      "promised_payment",
+      "qualified",
+      "refused",
+      "unqualified",
+      "voicemail"
+    ],
+    "excluded_bug_date_count": 58,
+    "excluded_no_answer_count": 7
+  },
+  "kpis": {
+    "retell_accuracy": {
+      "accuracy_pct": 65.7,
+      "correct": 23,
+      "total": 35
+    },
+    "llama_accuracy": {
+      "accuracy_pct": 82.9,
+      "correct": 29,
+      "total": 35
+    },
+    "fleiss_kappa": {
+      "value": 0.652,
+      "n_items": 35,
+      "n_raters": 3,
+      "interpretation": "substancial"
+    }
+  },
+  "resumen_by_label": [
+    {
+      "label": "promised_payment",
+      "support": 13,
+      "accuracy": 92.3
+    },
+    {
+      "label": "voicemail",
+      "support": 8,
+      "accuracy": 75.0
+    },
+    {
+      "label": "contacted",
+      "support": 4,
+      "accuracy": 0.0
+    },
+    {
+      "label": "callback_requested",
+      "support": 3,
+      "accuracy": 100.0
+    },
+    {
+      "label": "refused",
+      "support": 3,
+      "accuracy": 0.0
+    },
+    {
+      "label": "other",
+      "support": 2,
+      "accuracy": 50.0
+    },
+    {
+      "label": "qualified",
+      "support": 1,
+      "accuracy": 0.0
+    },
+    {
+      "label": "unqualified",
+      "support": 1,
+      "accuracy": 100.0
+    }
+  ],
+  "per_label_metrics": {
+    "retell": {
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "precision": [
+        0.75,
+        0.0,
+        0.25,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "recall": [
+        1.0,
+        0.0,
+        0.5,
+        0.923,
+        0.0,
+        0.0,
+        1.0,
+        0.75
+      ],
+      "f1": [
+        0.857,
+        0.0,
+        0.333,
+        0.96,
+        0.0,
+        0.0,
+        1.0,
+        0.857
+      ]
+    },
+    "llama": {
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "precision": [
+        1.0,
+        1.0,
+        1.0,
+        0.929,
+        1.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "recall": [
+        0.667,
+        0.75,
+        0.5,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.75
+      ],
+      "f1": [
+        0.8,
+        0.857,
+        0.667,
+        0.963,
+        1.0,
+        1.0,
+        0.0,
+        0.857
+      ]
+    }
+  },
+  "confusion_matrices": {
+    "retell_vs_claude": {
+      "labeler": "retell",
+      "judge": "claude",
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "matrix": [
+        [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          12,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      ],
+      "row_sums": [
+        3,
+        0,
+        1,
+        13,
+        1,
+        2,
+        1,
+        6
+      ],
+      "col_sums": [
+        4,
+        0,
+        4,
+        12,
+        0,
+        0,
+        1,
+        6
+      ],
+      "total": 27,
+      "correct": 23,
+      "accuracy": 0.8519,
+      "per_label": {
+        "callback_requested": {
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.857,
+          "support": 3
+        },
+        "contacted": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0
+        },
+        "other": {
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4,
+          "support": 1
+        },
+        "promised_payment": {
+          "precision": 1.0,
+          "recall": 0.923,
+          "f1": 0.96,
+          "support": 13
+        },
+        "qualified": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 1
+        },
+        "refused": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 2
+        },
+        "unqualified": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "voicemail": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 6
+        }
+      }
+    },
+    "llama_vs_claude": {
+      "labeler": "llama",
+      "judge": "claude",
+      "labels": [
+        "callback_requested",
+        "contacted",
+        "other",
+        "promised_payment",
+        "qualified",
+        "refused",
+        "unqualified",
+        "voicemail"
+      ],
+      "matrix": [
+        [
+          2,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      ],
+      "row_sums": [
+        3,
+        4,
+        1,
+        13,
+        1,
+        3,
+        0,
+        6
+      ],
+      "col_sums": [
+        2,
+        3,
+        1,
+        14,
+        1,
+        3,
+        1,
+        6
+      ],
+      "total": 31,
+      "correct": 29,
+      "accuracy": 0.9355,
+      "per_label": {
+        "callback_requested": {
+          "precision": 1.0,
+          "recall": 0.667,
+          "f1": 0.8,
+          "support": 3
+        },
+        "contacted": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.857,
+          "support": 4
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "promised_payment": {
+          "precision": 0.929,
+          "recall": 1.0,
+          "f1": 0.963,
+          "support": 13
+        },
+        "qualified": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "refused": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 3
+        },
+        "unqualified": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0
+        },
+        "voicemail": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 6
+        }
+      }
+    }
+  },
+  "errores": [
+    {
+      "date": "04/08",
+      "call_id": "call_562752e6d660083acc203011f5a",
+      "retell": "no_answer",
+      "claude": "contacted",
+      "llama": "contacted",
+      "dur": 17
+    },
+    {
+      "date": "04/08",
+      "call_id": "call_512c0a2c68d306f6c61e94f17cf",
+      "retell": "no_answer",
+      "claude": "contacted",
+      "llama": "contacted",
+      "dur": 18
+    },
+    {
+      "date": "04/07",
+      "call_id": "call_f1950ff133b31ca719afba80bf1",
+      "retell": "other",
+      "claude": "refused",
+      "llama": "refused",
+      "dur": 106
+    },
+    {
+      "date": "04/04",
+      "call_id": "call_2ad6ca84ccfb4009db662ab8740",
+      "retell": "no_answer",
+      "claude": "voicemail",
+      "llama": "no_answer",
+      "dur": 3
+    },
+    {
+      "date": "04/02",
+      "call_id": "call_bd90d3d387b9d07a97f6fc830e7",
+      "retell": "no_answer",
+      "claude": "other",
+      "llama": "no_answer",
+      "dur": 36
+    },
+    {
+      "date": "04/02",
+      "call_id": "call_8e9755947eb615636fdfed1c01f",
+      "retell": "no_answer",
+      "claude": "contacted",
+      "llama": "unqualified",
+      "dur": 11
+    },
+    {
+      "date": "03/31",
+      "call_id": "call_b3d3b639c7e10722d43ec09a591",
+      "retell": "no_answer",
+      "claude": "voicemail",
+      "llama": "no_answer",
+      "dur": 53
+    },
+    {
+      "date": "03/31",
+      "call_id": "call_187e34953d81b84ea070bdf1a79",
+      "retell": "other",
+      "claude": "promised_payment",
+      "llama": "promised_payment",
+      "dur": 75
+    },
+    {
+      "date": "03/30",
+      "call_id": "call_a810a92df1feeb3d8e4bfa25eae",
+      "retell": "callback_requested",
+      "claude": "qualified",
+      "llama": "qualified",
+      "dur": 173
+    },
+    {
+      "date": "03/30",
+      "call_id": "call_bc300df25bce9bf5b6a43264ccf",
+      "retell": "other",
+      "claude": "refused",
+      "llama": "refused",
+      "dur": 242
+    },
+    {
+      "date": "03/27",
+      "call_id": "call_187742498cac123ff359b64fe4a",
+      "retell": "no_answer",
+      "claude": "contacted",
+      "llama": "contacted",
+      "dur": 16
+    },
+    {
+      "date": "03/25",
+      "call_id": "call_5732869207e783a9bbb98868389",
+      "retell": "no_answer",
+      "claude": "refused",
+      "llama": "refused",
+      "dur": 37
+    }
+  ],
+  "kappa": {
+    "retell_vs_llama": 0.609,
+    "retell_vs_claude": 0.58,
+    "llama_vs_claude": 0.782
+  }
+}
