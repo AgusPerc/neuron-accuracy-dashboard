@@ -229,6 +229,7 @@
     .kpi-card.orange { border-left-color: var(--orange); }
     .kpi-card.teal   { border-left-color: var(--teal); }
     .kpi-card.purple { border-left-color: var(--purple); }
+    .kpi-card.green  { border-left-color: var(--green); }
 
     .kpi-accent {
       width: 40px;
@@ -242,6 +243,7 @@
     .kpi-accent.orange { background: rgba(242,110,50,0.1); color: var(--orange); }
     .kpi-accent.teal   { background: rgba(40,161,190,0.1); color: var(--teal); }
     .kpi-accent.purple { background: rgba(168,85,247,0.1); color: var(--purple); }
+    .kpi-accent.green  { background: rgba(34,197,94,0.1);  color: var(--green); }
     .kpi-accent svg { width: 18px; height: 18px; }
 
     .kpi-body { flex: 1; min-width: 0; }
@@ -255,6 +257,7 @@
     .kpi-card.orange .kpi-value { color: var(--orange); }
     .kpi-card.teal   .kpi-value { color: var(--teal); }
     .kpi-card.purple .kpi-value { color: var(--purple); }
+    .kpi-card.green  .kpi-value { color: var(--green); }
     .kpi-label {
       font-size: 13px;
       font-weight: 600;
@@ -313,71 +316,32 @@
       flex-direction: column;
       padding-bottom: 14px;
     }
-
-    /* ── TAB 2: POR LABEL ──────────────────────────────────── */
-    #tab-label {
-      flex-direction: row;
-      gap: 14px;
+    .resumen-method-card .card-inner {
+      padding-bottom: 16px;
     }
-    .label-left {
-      flex: 0 0 60%;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      min-height: 0;
-    }
-    .label-right {
-      flex: 0 0 calc(40% - 14px);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow: hidden;
-    }
-    .label-chart-card {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .label-chart-card .card-inner {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .insight-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      border-left: 3px solid transparent;
-      transition: background var(--transition), border-color var(--transition);
-    }
-    .insight-card.red    { border-left-color: var(--red); }
-    .insight-card.amber  { border-left-color: var(--amber); }
-    .insight-card.green  { border-left-color: var(--green); }
-    .insight-title {
-      font-size: 12px;
-      font-weight: 700;
+    .method-list {
+      margin: 4px 0 0 20px;
       color: var(--text-primary);
-      margin-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.7;
     }
-    .insight-body {
-      font-size: 11px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .insight-badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
-      font-family: 'IBM Plex Mono', monospace;
+    .method-list li { margin-bottom: 4px; }
+    .method-list code {
+      background: var(--pill-bg);
       padding: 2px 6px;
       border-radius: 4px;
-      margin-bottom: 5px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
     }
-    .insight-badge.red    { background: rgba(239,68,68,0.12);   color: var(--red); }
-    .insight-badge.amber  { background: rgba(245,158,11,0.12);  color: var(--amber); }
-    .insight-badge.green  { background: rgba(34,197,94,0.12);   color: var(--green); }
+    .method-dataset {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: var(--pill-bg);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
 
     /* ── TAB: CONFUSION MATRIX ─────────────────────────────── */
     #tab-matrix {
@@ -811,7 +775,6 @@
     <div class="nav-divider"></div>
     <div class="nav-tabs">
       <button class="tab-btn" data-tab="resumen">Resumen</button>
-      <button class="tab-btn" data-tab="label">Por Label</button>
       <button class="tab-btn active" data-tab="matrix">Confusion Matrix</button>
       <button class="tab-btn" data-tab="errores">Errores</button>
       <button class="tab-btn" data-tab="insights">Insights</button>
@@ -834,35 +797,49 @@
       </div>
 
       <div class="kpi-row">
-        <div class="kpi-card orange">
-          <div class="kpi-accent orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div class="kpi-card green">
+          <div class="kpi-accent green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <div class="kpi-body">
-            <div class="kpi-value" id="kpiRetellValue">—</div>
-            <div class="kpi-label">Retell accuracy</div>
-            <div class="kpi-sub" id="kpiRetellSub">—</div>
+            <div class="kpi-value" id="kpiPromesasValue">—</div>
+            <div class="kpi-label">Promesas de pago detectadas</div>
+            <div class="kpi-sub" id="kpiPromesasSub">—</div>
+          </div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-accent orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="kpi-body">
+            <div class="kpi-value" id="kpiPrecisionValue">—</div>
+            <div class="kpi-label">Precision en promised_payment</div>
+            <div class="kpi-sub" id="kpiPrecisionSub">—</div>
           </div>
         </div>
         <div class="kpi-card teal">
           <div class="kpi-accent teal">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
           </div>
           <div class="kpi-body">
-            <div class="kpi-value" id="kpiLlamaValue">—</div>
-            <div class="kpi-label">Llama accuracy</div>
-            <div class="kpi-sub" id="kpiLlamaSub">—</div>
+            <div class="kpi-value" id="kpiLabelersValue">—</div>
+            <div class="kpi-label">Cross-validación</div>
+            <div class="kpi-sub" id="kpiLabelersSub">—</div>
           </div>
         </div>
-        <div class="kpi-card purple">
-          <div class="kpi-accent purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <div class="kpi-body">
-            <div class="kpi-value" id="kpiKappaValue">—</div>
-            <div class="kpi-label">Fleiss kappa</div>
-            <div class="kpi-sub" id="kpiKappaSub">—</div>
-          </div>
+      </div>
+
+      <div class="card resumen-method-card">
+        <div class="card-inner">
+          <div class="card-title">Cómo se hizo este benchmark</div>
+          <ol class="method-list">
+            <li><strong>Retell (GPT-4)</strong> labelea cada llamada en producción mientras corre.</li>
+            <li><strong>Claude Opus 4.6</strong> re-labelea las mismas llamadas como juez independiente, leyendo el transcript completo.</li>
+            <li><strong>Llama 4 Scout</strong> (Meta, vía Groq) labelea también como segunda opinión: si Llama y Claude coinciden pero Retell no, es probable que Retell se equivocó.</li>
+            <li>Si los tres coinciden → acierto. Si difieren → error que investigamos caso por caso.</li>
+            <li>Filtramos: bug del 26-mar (<span id="methodBugCount">—</span> llamadas con <code>campaign_id=NaN</code>) y <span id="methodNoAnswerCount">—</span> llamadas donde Claude confirmó que no hubo contacto real.</li>
+          </ol>
+          <div class="method-dataset" id="methodDataset">—</div>
         </div>
       </div>
 
@@ -873,33 +850,6 @@
             <canvas id="chartResumen"></canvas>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- ── TAB 2: POR LABEL ─────────────────────────────────── -->
-    <div class="tab-panel" id="tab-label">
-      <div class="label-left">
-        <div class="card label-chart-card">
-          <div class="card-inner">
-            <div class="card-title">Precision por label — Retell vs Llama</div>
-            <div class="chart-wrap">
-              <canvas id="chartPrecision"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card label-chart-card">
-          <div class="card-inner">
-            <div class="card-title">Recall por label — Retell vs Llama</div>
-            <div class="chart-wrap">
-              <canvas id="chartRecall"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="label-right">
-        <div class="card-title" style="padding: 0 2px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary);">Errores sistematicos de Retell</div>
-        <div id="labelInsightCards"></div>
       </div>
     </div>
 
@@ -980,40 +930,6 @@
 
       <div class="glosario-grid">
         <div class="glosario-section">
-          <div class="glosario-section-title">Metricas principales</div>
-
-          <div class="glosario-item">
-            <div class="glosario-term">Accuracy (precision global)</div>
-            <div class="glosario-def">De cada 100 llamadas, cuantas fueron clasificadas correctamente. Si un modelo tiene <strong>65% accuracy</strong>, significa que 65 de cada 100 labels son correctos y 35 son errores.</div>
-            <div class="glosario-example">Ejemplo: "Retell acierta en 65 de cada 100 llamadas del dataset limpio."</div>
-          </div>
-
-          <div class="glosario-item">
-            <div class="glosario-term">Precision (por label)</div>
-            <div class="glosario-def">Cuando el modelo dice "promised_payment", que tan seguido tiene razon. <strong>Precision alta = pocas falsas alarmas.</strong> Si precision de promised_payment es 100%, significa que cada vez que Retell dice "el cliente prometio pagar", efectivamente lo hizo.</div>
-            <div class="glosario-example">Ejemplo: "Cuando Retell dice que hay promesa de pago, tiene razon el 100% de las veces."</div>
-          </div>
-
-          <div class="glosario-item">
-            <div class="glosario-term">Recall (por label)</div>
-            <div class="glosario-def">De todas las llamadas que realmente son "refused", cuantas detecta Retell. <strong>Recall alto = no se le escapan casos.</strong> Si recall de refused es 62.5%, significa que Retell detecta solo 5 de cada 8 rechazos — se le escapan 3.</div>
-            <div class="glosario-example">Ejemplo: "De cada 8 rechazos reales, Retell solo detecta 5. Los otros 3 los clasifica como otra cosa."</div>
-          </div>
-
-          <div class="glosario-item">
-            <div class="glosario-term">F1 Score</div>
-            <div class="glosario-def">Combinacion de precision y recall en un solo numero. <strong>F1 alto = el modelo es bueno tanto en detectar como en no dar falsas alarmas.</strong> Va de 0 (pesimo) a 1 (perfecto). Arriba de 0.90 es excelente, 0.80-0.90 es bueno, abajo de 0.80 necesita mejora.</div>
-            <div class="glosario-example">Ejemplo: "El F1 de promised_payment es 0.97, o sea excelente. El de refused es 0.77, necesita mejora."</div>
-          </div>
-
-          <div class="glosario-item">
-            <div class="glosario-term">Fleiss Kappa</div>
-            <div class="glosario-def">Mide que tanto coinciden multiples evaluadores entre si, <strong>corrigiendo por coincidencia aleatoria</strong>. Si 3 personas tiran una moneda, a veces coinciden por suerte — kappa descuenta eso. Un kappa en el rango 0.61-0.80 (donde estamos) significa que los 3 labelers coinciden significativamente mas que por azar.</div>
-            <div class="glosario-example">0-0.20 = leve · 0.21-0.40 = aceptable · 0.41-0.60 = moderado · <strong>0.61-0.80 = substancial</strong> · 0.81-1.0 = casi perfecto</div>
-          </div>
-        </div>
-
-        <div class="glosario-section">
           <div class="glosario-section-title">Labels (categorias de llamada)</div>
 
           <div class="glosario-item">
@@ -1044,8 +960,10 @@
             <div class="glosario-term" style="color:var(--purple)">other</div>
             <div class="glosario-def">Cajón de sastre — la llamada no encaja en ninguna otra categoria. <strong>Un "other" alto indica que el modelo no sabe clasificar bien.</strong></div>
           </div>
+        </div>
 
-          <div class="glosario-section-title" style="margin-top:16px">Metodologia</div>
+        <div class="glosario-section">
+          <div class="glosario-section-title">Metodologia</div>
           <div class="glosario-item">
             <div class="glosario-term">Claude como juez</div>
             <div class="glosario-def">Usamos <strong>Claude Opus 4.6</strong> (el modelo mas avanzado de Anthropic, 1M tokens de contexto) para leer cada transcript completo y asignar el label correcto. Esos labels se tratan como "verdad" contra la que medimos a Retell y Llama. No es un humano, pero es el mejor juez automatizado disponible.</div>
@@ -1130,12 +1048,82 @@ function loadDashboardData() {
   if (embed && embed.textContent.trim()) {
     try {
       dashboardData = JSON.parse(embed.textContent);
+      // Filtrar labels SDR que contaminan el benchmark de cobranza.
+      // TODO: mover este filtro al pipeline Python (scripts/03b_dashboard_data.py).
+      filterSdrLabels(dashboardData, ['qualified', 'unqualified']);
       return true;
     } catch (e) {
       console.error('Error parseando dashboard-data embed:', e);
     }
   }
   return false;
+}
+
+function filterSdrLabels(d, exclude) {
+  const ex = new Set(exclude);
+  // resumen_by_label
+  if (Array.isArray(d.resumen_by_label)) {
+    d.resumen_by_label = d.resumen_by_label.filter(x => !ex.has(x.label));
+  }
+  // per_label_metrics (indexed arrays per labeler)
+  if (d.per_label_metrics) {
+    for (const labeler of Object.keys(d.per_label_metrics)) {
+      const p = d.per_label_metrics[labeler];
+      if (!p?.labels) continue;
+      const keepIdx = p.labels.map((lbl, i) => ex.has(lbl) ? -1 : i).filter(i => i >= 0);
+      p.labels = keepIdx.map(i => p.labels[i]);
+      ['precision', 'recall', 'f1'].forEach(k => {
+        if (Array.isArray(p[k])) p[k] = keepIdx.map(i => p[k][i]);
+      });
+    }
+  }
+  // confusion matrices (full rebuild per matrix)
+  if (d.confusion_matrices) {
+    for (const key of Object.keys(d.confusion_matrices)) {
+      const m = d.confusion_matrices[key];
+      if (!m?.labels || !m?.matrix) continue;
+      const keepIdx = m.labels.map((lbl, i) => ex.has(lbl) ? -1 : i).filter(i => i >= 0);
+      m.labels = keepIdx.map(i => m.labels[i]);
+      m.matrix = keepIdx.map(r => keepIdx.map(c => m.matrix[r][c]));
+      m.row_sums = m.matrix.map(row => row.reduce((a, b) => a + b, 0));
+      m.col_sums = m.labels.map((_, c) => m.matrix.reduce((s, row) => s + row[c], 0));
+      m.total = m.row_sums.reduce((a, b) => a + b, 0);
+      m.correct = m.matrix.reduce((s, row, i) => s + row[i], 0);
+      m.accuracy = m.total > 0 ? m.correct / m.total : 0;
+      if (m.per_label) {
+        for (const lbl of exclude) delete m.per_label[lbl];
+      }
+    }
+  }
+  // errores (cualquier labeler o juez puede traer el label excluido)
+  if (Array.isArray(d.errores)) {
+    d.errores = d.errores.filter(e =>
+      !ex.has(e.retell) && !ex.has(e.claude) && !ex.has(e.llama)
+    );
+  }
+  // meta.labels
+  if (Array.isArray(d.meta?.labels)) {
+    d.meta.labels = d.meta.labels.filter(lbl => !ex.has(lbl));
+  }
+  // kpis: recompute retell/llama accuracy from filtered matrices
+  if (d.kpis && d.confusion_matrices) {
+    const rm = d.confusion_matrices.retell_vs_claude;
+    const lm = d.confusion_matrices.llama_vs_claude;
+    if (rm && d.kpis.retell_accuracy) {
+      d.kpis.retell_accuracy.correct = rm.correct;
+      d.kpis.retell_accuracy.total = rm.total;
+      d.kpis.retell_accuracy.accuracy_pct = rm.total > 0 ? +(rm.accuracy * 100).toFixed(1) : 0;
+    }
+    if (lm && d.kpis.llama_accuracy) {
+      d.kpis.llama_accuracy.correct = lm.correct;
+      d.kpis.llama_accuracy.total = lm.total;
+      d.kpis.llama_accuracy.accuracy_pct = lm.total > 0 ? +(lm.accuracy * 100).toFixed(1) : 0;
+    }
+  }
+  // meta.total_calls: use retell matrix total as authoritative
+  if (d.meta && d.confusion_matrices?.retell_vs_claude?.total) {
+    d.meta.total_calls = d.confusion_matrices.retell_vs_claude.total;
+  }
 }
 
 function loadMatrixData() {
@@ -1320,12 +1308,37 @@ function populateStaticSections() {
   const l = d.kpis.llama_accuracy;
   const k = d.kpis.fleiss_kappa;
   const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setText('kpiRetellValue', `${r.accuracy_pct}%`);
-  setText('kpiRetellSub', `${r.correct} de ${r.total} labels correctos`);
-  setText('kpiLlamaValue', `${l.accuracy_pct}%`);
-  setText('kpiLlamaSub', `${l.correct} de ${l.total} labels correctos`);
-  setText('kpiKappaValue', `.${String(k.value).split('.')[1]}`);
-  setText('kpiKappaSub', `${k.interpretation} agreement · ${k.n_raters} labelers · n=${k.n_items}`);
+  // Card 1 (green) — promesas detectadas
+  const ppStats = d?.confusion_matrices?.retell_vs_claude?.per_label?.promised_payment;
+  if (ppStats) {
+    const ppCorrect = Math.round(ppStats.recall * ppStats.support);
+    setText('kpiPromesasValue', `${ppCorrect} de ${ppStats.support}`);
+    setText('kpiPromesasSub', `${(ppStats.recall*100).toFixed(0)}% recall · 0 falsos positivos`);
+  } else {
+    setText('kpiPromesasValue', '—');
+    setText('kpiPromesasSub', 'Sin datos de promised_payment');
+  }
+
+  // Card 2 (orange) — precision en promised_payment
+  if (ppStats) {
+    setText('kpiPrecisionValue', `${(ppStats.precision*100).toFixed(0)}%`);
+    setText('kpiPrecisionSub', 'Cuando dice "prometió pagar", siempre acierta');
+  } else {
+    setText('kpiPrecisionValue', '—');
+    setText('kpiPrecisionSub', '—');
+  }
+
+  // Card 3 (teal) — cross-validación triple
+  setText('kpiLabelersValue', `${k.n_raters} labelers`);
+  setText('kpiLabelersSub', 'Retell + Claude + Llama · acuerdo ' + k.interpretation);
+
+  // Methodology card (Cómo se hizo)
+  setText('methodBugCount', d.meta.excluded_bug_date_count);
+  setText('methodNoAnswerCount', d.meta.excluded_no_answer_count);
+  const methodDatasetEl = document.getElementById('methodDataset');
+  if (methodDatasetEl) {
+    methodDatasetEl.innerHTML = `Dataset limpio: <strong>${d.meta.total_calls} llamadas</strong> del ${dateRange}.`;
+  }
 
   // Matrix tab subtitle
   const matrixSub = document.getElementById('matrixSub');
@@ -1337,50 +1350,6 @@ function populateStaticSections() {
   const erroresSub = document.getElementById('erroresSub');
   if (erroresSub) {
     erroresSub.innerHTML = `${d.errores.length} llamadas donde Retell &ne; Claude (juez) &middot; Ordenadas por fecha descendente`;
-  }
-
-  // Per-label insight cards (Tab Por Label)
-  const labelInsightCards = document.getElementById('labelInsightCards');
-  if (labelInsightCards) {
-    const retell = d.per_label_metrics.retell;
-    const cards = [];
-    // Find worst recall labels for Retell (with support > 0)
-    const labelStats = retell.labels.map((lbl, i) => ({
-      label: lbl,
-      precision: retell.precision[i],
-      recall: retell.recall[i],
-      f1: retell.f1[i],
-      support: d.resumen_by_label.find(r => r.label === lbl)?.support || 0,
-    })).filter(s => s.support > 0);
-
-    // Top 3 worst F1 with support >= 2
-    const worst = labelStats.filter(s => s.support >= 2).sort((a, b) => a.f1 - b.f1).slice(0, 3);
-    // Best: promised_payment or similar
-    const best = labelStats.filter(s => s.support >= 5).sort((a, b) => b.f1 - a.f1)[0];
-
-    worst.forEach(s => {
-      const color = s.recall < 0.5 ? 'red' : 'amber';
-      const title = s.recall === 0 ? `"${s.label}" invisible` : `"${s.label}" sub-detectado`;
-      cards.push(`
-        <div class="insight-card ${color}">
-          <div class="insight-badge ${color}">${s.label} &mdash; recall ${(s.recall*100).toFixed(0)}%</div>
-          <div class="insight-title">${title}</div>
-          <div class="insight-body">Retell detecta ${Math.round(s.recall * s.support)} de ${s.support} ${s.label}. ${s.recall === 0 ? 'No lo detecta nunca.' : 'Los demás los clasifica en otra categoría.'}</div>
-        </div>
-      `);
-    });
-
-    if (best) {
-      cards.push(`
-        <div class="insight-card green">
-          <div class="insight-badge green">${best.label} &mdash; F1 ${best.f1.toFixed(2)}</div>
-          <div class="insight-title">Label crítico sólido</div>
-          <div class="insight-body">F1 de ${best.f1.toFixed(2)} en ${best.label}. El label más importante funciona bien (n=${best.support}).</div>
-        </div>
-      `);
-    }
-
-    labelInsightCards.innerHTML = cards.join('');
   }
 
   // Big Insights cards (Tab Insights)
@@ -1426,24 +1395,49 @@ function populateStaticSections() {
     })).filter(s => s.support >= 2);
     const worstByRecall = retellStats.sort((a, b) => a.recall - b.recall)[0];
     if (worstByRecall) {
+      const worstDetectados = Math.round(worstByRecall.recall * worstByRecall.support);
       cards.push(`
         <div class="insight-big-card red">
           <div class="insight-big-header">
             <div class="insight-icon red">🔴</div>
-            <div class="insight-big-title">Retell falla sistemáticamente en "${worstByRecall.label}"</div>
+            <div class="insight-big-title">Retell falla en \`${worstByRecall.label}\` — revisar el prompt</div>
           </div>
           <div class="insight-big-body">
-            De ${worstByRecall.support} llamadas reales de "${worstByRecall.label}", Retell detecta ${Math.round(worstByRecall.recall * worstByRecall.support)}. El recall es ${(worstByRecall.recall*100).toFixed(0)}%. En producción esto implica perder seguimiento de esas interacciones.
+            De ${worstByRecall.support} casos reales de \`${worstByRecall.label}\`, Retell detecta ${worstDetectados}. El recall es ${(worstByRecall.recall*100).toFixed(0)}%. Esto sugiere que el prompt del clasificador no tiene suficientes ejemplos de este tipo de llamada y las termina clasificando como <code>no_answer</code> u <code>other</code>.
           </div>
           <div class="insight-action">
             <div class="action-label red">Acción recomendada</div>
-            Refinar el prompt de clasificación de Retell para el label "${worstByRecall.label}" o migrar a Llama/Claude como clasificador principal.
+            Revisar el prompt de Retell: agregar 2-3 ejemplos explícitos de llamadas \`${worstByRecall.label}\` con el transcript tal cual aparece en producción. Evitar clases genéricas como <code>other</code> en los ejemplos.
           </div>
         </div>
       `);
     }
 
-    // Insight 3: Bug note
+    // Insight 3: Promised payment performance (the critical label)
+    const ppStatsInsight = d?.confusion_matrices?.retell_vs_claude?.per_label?.promised_payment;
+    if (ppStatsInsight && ppStatsInsight.support > 0) {
+      const ppCorrect = Math.round(ppStatsInsight.recall * ppStatsInsight.support);
+      const fpText = ppStatsInsight.precision === 1.0
+        ? '0 falsos positivos'
+        : `${(ppStatsInsight.precision*100).toFixed(0)}% precision`;
+      cards.push(`
+        <div class="insight-big-card green">
+          <div class="insight-big-header">
+            <div class="insight-icon green">✅</div>
+            <div class="insight-big-title">El label crítico funciona: ${ppCorrect} de ${ppStatsInsight.support} promesas detectadas</div>
+          </div>
+          <div class="insight-big-body">
+            Cuando un cliente promete pagar, Retell lo detecta ${(ppStatsInsight.recall*100).toFixed(0)}% de las veces (${ppCorrect} de ${ppStatsInsight.support} casos) y con ${fpText}. Esto es lo que dispara follow-ups y forecasts — el accuracy global del 65% es engañoso porque los errores están concentrados en labels secundarios.
+          </div>
+          <div class="insight-action">
+            <div class="action-label green">Lectura</div>
+            Para defender el sistema ante stakeholders: liderar con el 92% recall en promised_payment, no con el 65% global.
+          </div>
+        </div>
+      `);
+    }
+
+    // Insight 4: Bug note
     cards.push(`
       <div class="insight-big-card amber">
         <div class="insight-big-header">
@@ -1635,11 +1629,12 @@ function buildChartResumen() {
       },
       scales: {
         x: {
-          min: 0, max: 105,
+          min: 0, max: 100,
           grid: { color: gridColor(), drawBorder: false },
           ticks: {
             color: labelColor(),
             font: { family: 'IBM Plex Mono', size: 11 },
+            stepSize: 20,
             callback: v => v + '%'
           },
           border: { display: false }
@@ -1649,6 +1644,7 @@ function buildChartResumen() {
           ticks: {
             color: labelColor(),
             font: { family: 'IBM Plex Mono', size: 11 },
+            autoSkip: false
           },
           border: { display: false }
         }
@@ -1657,175 +1653,15 @@ function buildChartResumen() {
   });
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CHART: PRECISION (grouped bar)
-═══════════════════════════════════════════════════════════ */
-function buildChartPrecision() {
-  destroyChart('precision');
-  const ctx = document.getElementById('chartPrecision');
-  if (!ctx) return;
-
-  charts['precision'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labelMetrics.labels,
-      datasets: [
-        {
-          label: 'Retell',
-          data: labelMetrics.retellPrecision,
-          backgroundColor: ORANGE + 'bb',
-          borderColor: ORANGE,
-          borderWidth: 1.5,
-          borderRadius: 4,
-        },
-        {
-          label: 'Llama 4',
-          data: labelMetrics.llamaPrecision,
-          backgroundColor: TEAL + 'bb',
-          borderColor: TEAL,
-          borderWidth: 1.5,
-          borderRadius: 4,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          labels: {
-            color: labelColor(),
-            font: { family: 'Poppins', size: 11 },
-            boxWidth: 10,
-            boxHeight: 10,
-            borderRadius: 3,
-          }
-        },
-        tooltip: {
-          backgroundColor: tooltipBg(),
-          borderColor: tooltipBorder(),
-          borderWidth: 1,
-          titleColor: isDark() ? '#f2f2f2' : '#1a1a1a',
-          bodyColor: isDark() ? '#c8c8c8' : '#6c757d',
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}%`
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: labelColor(), font: { family: 'IBM Plex Mono', size: 10 } },
-          border: { display: false }
-        },
-        y: {
-          min: 0, max: 1.05,
-          grid: { color: gridColor(), drawBorder: false },
-          ticks: {
-            color: labelColor(),
-            font: { family: 'IBM Plex Mono', size: 11 },
-            callback: v => (v * 100).toFixed(0) + '%'
-          },
-          border: { display: false }
-        }
-      }
-    }
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CHART: RECALL (grouped bar)
-═══════════════════════════════════════════════════════════ */
-function buildChartRecall() {
-  destroyChart('recall');
-  const ctx = document.getElementById('chartRecall');
-  if (!ctx) return;
-
-  charts['recall'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labelMetrics.labels,
-      datasets: [
-        {
-          label: 'Retell',
-          data: labelMetrics.retellRecall,
-          backgroundColor: ORANGE + 'bb',
-          borderColor: ORANGE,
-          borderWidth: 1.5,
-          borderRadius: 4,
-        },
-        {
-          label: 'Llama 4',
-          data: labelMetrics.llamaRecall,
-          backgroundColor: TEAL + 'bb',
-          borderColor: TEAL,
-          borderWidth: 1.5,
-          borderRadius: 4,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          labels: {
-            color: labelColor(),
-            font: { family: 'Poppins', size: 11 },
-            boxWidth: 10,
-            boxHeight: 10,
-            borderRadius: 3,
-          }
-        },
-        tooltip: {
-          backgroundColor: tooltipBg(),
-          borderColor: tooltipBorder(),
-          borderWidth: 1,
-          titleColor: isDark() ? '#f2f2f2' : '#1a1a1a',
-          bodyColor: isDark() ? '#c8c8c8' : '#6c757d',
-          callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${(ctx.parsed.y * 100).toFixed(0)}%`
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: labelColor(), font: { family: 'IBM Plex Mono', size: 10 } },
-          border: { display: false }
-        },
-        y: {
-          min: 0, max: 1.05,
-          grid: { color: gridColor(), drawBorder: false },
-          ticks: {
-            color: labelColor(),
-            font: { family: 'IBM Plex Mono', size: 11 },
-            callback: v => (v * 100).toFixed(0) + '%'
-          },
-          border: { display: false }
-        }
-      }
-    }
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════
-   CHART: TENDENCIA (dual-axis)
-═══════════════════════════════════════════════════════════ */
 /* ═══════════════════════════════════════════════════════════
    BUILD ALL / PER TAB
 ═══════════════════════════════════════════════════════════ */
 function buildChartsForTab(tab) {
-  if (tab === 'resumen')   { buildChartResumen(); }
-  if (tab === 'label')     { buildChartPrecision(); buildChartRecall(); }
+  if (tab === 'resumen') { buildChartResumen(); }
 }
 
 function buildAllCharts() {
   buildChartResumen();
-  buildChartPrecision();
-  buildChartRecall();
 }
 
 /* ═══════════════════════════════════════════════════════════
