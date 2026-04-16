@@ -3,6 +3,7 @@ Paso 2: Correr labelers de evaluación (Gemini, Llama, Claude Sonnet 4).
 Clasifica cada transcripción y guarda resultados en data/labels_comparison.csv.
 """
 
+import argparse
 import os
 import sys
 import json
@@ -127,6 +128,16 @@ def estimate_cost(df, avg_tokens_per_transcript=1500):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--yes', action='store_true', help='Skip interactive confirmation')
+    parser.add_argument('--all', action='store_true', help='Process ALL eligible calls (not sample of 100)')
+    parser.add_argument('--limit', type=int, default=100, help='Sample size when --all is not set (default 100)')
+    parser.add_argument('--skip-gemini', action='store_true', help='Skip Gemini labeler')
+    parser.add_argument('--skip-llama', action='store_true', help='Skip Llama labeler')
+    parser.add_argument('--skip-claude', action='store_true', help='Skip Claude Sonnet 4 labeler')
+    parser.add_argument('--exclude-date', action='append', default=[], help='Date to exclude (YYYY-MM-DD, can repeat)')
+    args = parser.parse_args()
+
     dataset_path = os.path.join(DATA_DIR, 'dataset_completo.csv')
     if not os.path.exists(dataset_path):
         print("ERROR: Primero ejecuta 01_extract_data.py")
@@ -138,6 +149,15 @@ def main():
     df = df[df['transcript'].notna() & (df['transcript'].str.strip() != '')]
     if 'call_status' in df.columns:
         df = df[df['call_status'].str.lower().isin(['completed', 'ended'])]
+
+    # Exclude specific dates (e.g., platform bugs)
+    if args.exclude_date and 'start_timestamp' in df.columns:
+        df = df.copy()
+        df['_date'] = df['start_timestamp'].astype(str).str[:10]
+        before = len(df)
+        df = df[~df['_date'].isin(args.exclude_date)]
+        df = df.drop(columns=['_date'])
+        print(f"Excluidas por --exclude-date {args.exclude_date}: {before - len(df)}")
 
     print(f"Llamadas validas para clasificar: {len(df)}")
 
@@ -151,36 +171,40 @@ def main():
 
     prompt = load_prompt(labels)
 
-    # Sample inicial: ultimas N llamadas por start_timestamp
-    sample_size = min(100, len(df))
+    # Sample: todas (--all) o las N mas recientes
     if 'start_timestamp' in df.columns:
         df = df.sort_values('start_timestamp', ascending=False, na_position='last')
+    sample_size = len(df) if args.all else min(args.limit, len(df))
     df_sample = df.head(sample_size).copy()
-    print(f"\nUsando sample de {sample_size} llamadas (las mas recientes)")
+    print(f"\nUsando sample de {sample_size} llamadas{' (TODAS)' if args.all else ' (mas recientes)'}")
 
-    # Estimar costo y pedir confirmación
+    # Estimar costo
     estimate_cost(df_sample)
-    confirm = input("\nContinuar? (y/n): ").strip().lower()
-    if confirm != 'y':
-        print("Cancelado.")
-        sys.exit(0)
+    if not args.yes:
+        confirm = input("\nContinuar? (y/n): ").strip().lower()
+        if confirm != 'y':
+            print("Cancelado.")
+            sys.exit(0)
 
     # Determinar qué labelers correr
     labelers = {}
-    if GOOGLE_API_KEY:
+    if GOOGLE_API_KEY and not args.skip_gemini:
         labelers['gemini'] = call_gemini
     else:
-        print("WARN: GOOGLE_API_KEY no encontrada, skipping Gemini")
+        reason = '--skip-gemini' if args.skip_gemini else 'GOOGLE_API_KEY no encontrada'
+        print(f"WARN: skipping Gemini ({reason})")
 
-    if GROQ_API_KEY:
+    if GROQ_API_KEY and not args.skip_llama:
         labelers['llama'] = call_llama
     else:
-        print("WARN: GROQ_API_KEY no encontrada, skipping Llama")
+        reason = '--skip-llama' if args.skip_llama else 'GROQ_API_KEY no encontrada'
+        print(f"WARN: skipping Llama ({reason})")
 
-    if ANTHROPIC_API_KEY:
+    if ANTHROPIC_API_KEY and not args.skip_claude:
         labelers['claude_sonnet4'] = call_claude_sonnet4
     else:
-        print("WARN: ANTHROPIC_API_KEY no encontrada, skipping Claude Sonnet 4")
+        reason = '--skip-claude' if args.skip_claude else 'ANTHROPIC_API_KEY no encontrada'
+        print(f"WARN: skipping Claude Sonnet 4 ({reason})")
 
     if not labelers:
         print("ERROR: No hay API keys configuradas para ningún labeler.")

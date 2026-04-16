@@ -1,10 +1,15 @@
 """
 Paso 3b: Genera dashboard_data.json con todo lo que el dashboard necesita.
 
-Aplica 2 filtros:
+Aplica filtros:
   1. Excluye llamadas del 2026-03-26 (bug de plataforma: Retell clasifico
      auto como no_answer llamadas con contenido real, campaign_id=NaN)
-  2. Excluye llamadas donde Claude (juez) dijo no_answer
+  2. Excluye labels SDR (qualified/unqualified) — son de prospeccion, no de cobranza
+  3. (REMOVIDO) Antes excluia Claude=no_answer. Ahora se reincluyen para honestidad
+     de metricas (ver memoria Tema B).
+
+Nota: las llamadas sin transcript quedan fuera en el pipeline (02_run_labelers.py),
+no aparecen en labels_comparison.csv.
 
 Usa Claude Opus 4.6 como ground truth.
 
@@ -27,6 +32,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'outputs')
 
 BUG_DATE = '2026-03-26'  # Bug de plataforma: contaminacion no_answer
+SDR_LABELS = {'qualified', 'unqualified'}  # Labels de SDR, no de cobranza
 
 
 def fleiss_kappa(ratings_matrix):
@@ -80,22 +86,41 @@ def main():
     df['date'] = df['start_timestamp'].str[:10]
 
     # === FILTRO 1: Bug 2026-03-26 ===
+    # El filtro puede haber sido aplicado upstream en 02_run_labelers.py
+    # (via --exclude-date). Contamos las originales del calls.csv para
+    # reportar un numero honesto en el dashboard.
     n_before = len(df)
     df = df[df['date'] != BUG_DATE].copy()
-    n_bug = n_before - len(df)
-    print(f"Excluidas por bug {BUG_DATE}: {n_bug}")
+    n_bug_here = n_before - len(df)
+    try:
+        calls_all = pd.read_csv(calls_path, usecols=['start_timestamp'])
+        calls_all['_d'] = calls_all['start_timestamp'].astype(str).str[:10]
+        n_bug_original = int((calls_all['_d'] == BUG_DATE).sum())
+    except Exception:
+        n_bug_original = n_bug_here
+    n_bug = max(n_bug_here, n_bug_original)
+    print(f"Excluidas por bug {BUG_DATE}: {n_bug} (en este run: {n_bug_here}, upstream: {n_bug_original - n_bug_here})")
 
     # Ground truth = Claude Opus 4.6
     df['ground_truth'] = df['label_claude']
 
-    # === FILTRO 2: Claude dijo no_answer ===
+    # === FILTRO 2: Labels SDR (qualified/unqualified) — no son de cobranza ===
+    # Excluir si CUALQUIER labeler o ground_truth tiene esas labels
     n_before = len(df)
-    df = df[df['ground_truth'] != 'no_answer'].copy()
-    n_noans = n_before - len(df)
-    print(f"Excluidas por Claude=no_answer: {n_noans}")
+    sdr_mask = df['ground_truth'].isin(SDR_LABELS)
+    for labeler_col in ['label_retell', 'label_llama', 'label_claude']:
+        if labeler_col in df.columns:
+            sdr_mask |= df[labeler_col].isin(SDR_LABELS)
+    df = df[~sdr_mask].copy()
+    n_sdr = n_before - len(df)
+    print(f"Excluidas por labels SDR (qualified/unqualified): {n_sdr}")
 
     # Filtrar invalidos del ground truth
+    n_before = len(df)
     df = df[df['ground_truth'].notna() & ~df['ground_truth'].isin(['parse_error', 'api_error'])]
+    n_invalid = n_before - len(df)
+    if n_invalid:
+        print(f"Excluidas por ground_truth invalido: {n_invalid}")
     print(f"Dataset final: {len(df)} llamadas")
 
     labels_list = sorted(df['ground_truth'].unique().tolist())
@@ -114,12 +139,13 @@ def main():
             'date_range': {'start': date_min, 'end': date_max},
             'filters': [
                 f'Excluidas llamadas del {BUG_DATE} (bug de plataforma: {n_bug} calls)',
-                f'Excluidas llamadas donde Claude=no_answer ({n_noans} calls)',
+                f'Excluidas labels SDR qualified/unqualified ({n_sdr} calls)',
+                'Incluye todos los labels incluyendo no_answer (honestidad metricas)',
             ],
             'judge': 'Claude Opus 4.6',
             'labels': labels_list,
             'excluded_bug_date_count': int(n_bug),
-            'excluded_no_answer_count': int(n_noans),
+            'excluded_sdr_labels_count': int(n_sdr),
         },
         'kpis': {},
         'resumen_by_label': [],
