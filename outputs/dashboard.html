@@ -761,6 +761,136 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+
+    /* ── MOBILE RESPONSIVE ────────────────────────────────── */
+    @media (max-width: 768px) {
+      html, body {
+        height: auto;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #app {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+      nav {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        gap: 8px;
+      }
+      .nav-logo-text { font-size: 12px; }
+      .nav-divider { display: none; }
+      .nav-tabs {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        justify-content: flex-start;
+        gap: 2px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        font-size: 11px;
+        padding: 5px 10px;
+        flex-shrink: 0;
+      }
+      .theme-toggle { font-size: 11px; padding: 4px 8px; }
+      .tab-content { overflow: visible; }
+      .tab-panel {
+        padding: 12px;
+        overflow: visible;
+        height: auto;
+      }
+      .tab-panel.active {
+        height: auto;
+        overflow: visible;
+      }
+      .kpi-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .kpi-card { padding: 12px 14px; }
+      .kpi-value { font-size: 20px; }
+      .kpi-label { font-size: 11px; }
+      .kpi-sub { font-size: 10px; }
+      .card { border-radius: 12px; }
+      .card-inner { padding: 12px 14px; }
+      .card-title { font-size: 11px; margin-bottom: 8px; }
+      .matrix-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .matrix-cell {
+        min-width: 36px;
+        font-size: 10px;
+        padding: 4px;
+      }
+      .matrix-cell.header { font-size: 9px; min-width: 36px; }
+      .table-container { overflow-x: auto; }
+      table { font-size: 11px; }
+      th, td { padding: 6px 8px; }
+      .insights-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 12px;
+        overflow-y: auto;
+      }
+      .insight-big-card { padding: 14px; }
+      .insight-big-title { font-size: 13px; }
+      .insight-big-body { font-size: 12px; }
+      .insight-action { font-size: 11px; }
+      .insight-icon { width: 28px; height: 28px; font-size: 14px; }
+      .glosario-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+      .glosario-item { font-size: 12px; }
+      #tab-resumen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .resumen-chart-card { flex: none; }
+      .chart-wrap {
+        position: relative;
+        min-height: 280px;
+      }
+      .resumen-method-card { flex: none; }
+      #tab-matrix {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #tab-errores {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #tab-insights {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #tab-glosario {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 8px 10px; }
+      .nav-logo img { height: 20px; }
+      .nav-logo-text { font-size: 11px; }
+      .tab-btn { font-size: 10px; padding: 4px 8px; }
+      .tab-panel { padding: 8px; }
+      .kpi-value { font-size: 18px; }
+      .matrix-cell { min-width: 30px; font-size: 9px; padding: 3px; }
+      .matrix-cell.header { font-size: 8px; }
+      .insight-big-card { padding: 12px; }
+      .insight-big-title { font-size: 12px; }
+      .insight-big-body { font-size: 11px; }
+      table { font-size: 10px; }
+      th, td { padding: 4px 6px; }
+    }
   </style>
 </head>
 <body>
